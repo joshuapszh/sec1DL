@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 3: Computer Networks - Smart Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden-section { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans p-4 md:p-8 min-h-screen flex flex-col items-center">
+
+    <div class="max-w-3xl w-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8 mt-4 fade-in" id="main-card">
+        
+        <!-- Header -->
+        <div id="quiz-header" class="bg-indigo-600 p-6 text-white text-center transition-colors duration-500">
+            <h1 class="text-2xl font-bold">Unit 3: Computer Networks</h1>
+            <p id="section-subtitle" class="text-indigo-200 mt-1 text-sm font-medium">Part 1: Multiple Choice</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-100 h-2">
+            <div id="progress-bar" class="bg-indigo-400 h-2 transition-all duration-300" style="width: 0%;"></div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-6 md:p-8 relative">
+            
+            <div id="question-counter" class="text-sm font-bold text-slate-400 mb-4 tracking-wider uppercase">Question 1 of 10</div>
+            
+            <!-- Question Text -->
+            <h2 id="question-text" class="text-xl font-semibold mb-6 text-slate-800 leading-relaxed"></h2>
+
+            <!-- MCQ Container -->
+            <div id="mcq-container" class="space-y-3 hidden-section"></div>
+
+            <!-- Open Ended Container (Text Area) -->
+            <div id="open-ended-container" class="hidden-section">
+                <textarea id="student-answer" rows="5" class="w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow resize-y text-slate-700" placeholder="Type your detailed answer here..."></textarea>
+                <button id="check-answer-btn" class="mt-4 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors w-full shadow-sm">Check My Answer</button>
+            </div>
+
+            <!-- Instant Feedback Area -->
+            <div id="feedback-container" class="hidden mt-6 p-5 rounded-xl border fade-in">
+                
+                <!-- MCQ Feedback -->
+                <div id="mcq-feedback" class="hidden-section">
+                    <p id="mcq-title" class="font-bold mb-2 text-lg"></p>
+                    <p id="mcq-rationale" class="text-slate-700"></p>
+                </div>
+
+                <!-- Open Ended Feedback -->
+                <div id="oe-feedback" class="hidden-section">
+                    <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-200/60">
+                        <h3 class="font-bold text-lg text-slate-800">Automated Scoring Result</h3>
+                        <span id="oe-score" class="px-3 py-1 bg-slate-100 font-bold text-lg rounded-lg text-slate-700">0/100</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Keyword Analysis:</p>
+                        <div id="keyword-badges" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <div class="bg-blue-50 p-4 rounded-lg border border-blue-100 mt-6">
+                        <p class="text-xs font-bold text-blue-500 uppercase tracking-wider mb-1">Model Answer</p>
+                        <p id="model-answer" class="text-blue-900 text-sm leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <button id="next-btn" class="mt-6 px-6 py-3 bg-slate-800 hover:bg-slate-900 text-white font-medium rounded-xl transition-colors w-full">Next Question ➔</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Results Screen -->
+    <div id="results-container" class="hidden max-w-3xl w-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden text-center p-10 fade-in">
+        <h2 class="text-4xl font-bold text-slate-800 mb-3">Quiz Complete!</h2>
+        <p class="text-slate-500 mb-8 text-lg">Great job working through all sections.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
+                <p class="text-indigo-600 font-bold mb-1">MCQ Score</p>
+                <p class="text-3xl font-bold text-indigo-900" id="final-mcq-score">0/10</p>
+            </div>
+            <div class="bg-teal-50 p-6 rounded-2xl border border-teal-100">
+                <p class="text-teal-600 font-bold mb-1">Short Answer</p>
+                <p class="text-3xl font-bold text-teal-900" id="final-sa-score">0%</p>
+            </div>
+            <div class="bg-purple-50 p-6 rounded-2xl border border-purple-100">
+                <p class="text-purple-600 font-bold mb-1">Long Answer</p>
+                <p class="text-3xl font-bold text-purple-900" id="final-la-score">0%</p>
+            </div>
+        </div>
+        
+        <button onclick="location.reload()" class="px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl transition-colors shadow-lg">Retake Quiz</button>
+    </div>
+
+    <script>
+        // --- QUIZ DATA ---
+        const mcqData = [
+            { q: "In the URL 'https://www.mceducation.com/about-us', what does the 'https://' part represent?", opts: ["The protocol", "The domain name", "The path", "The IP address"], ans: 0, reason: "The protocol (like HTTP or HTTPS) is the set of rules that defines how data is transferred." },
+            { q: "What is the primary function of the Domain Name System (DNS)?", opts: ["To encrypt data", "To translate URLs into numerical IP addresses", "To boost Wi-Fi signals", "To scan for viruses"], ans: 1, reason: "DNS translates human-readable domain names into IP addresses needed to locate servers." },
+            { q: "Which wireless network is best suited for connecting a wireless mouse to a laptop?", opts: ["Wi-Fi", "Cellular Network", "Bluetooth", "5G"], ans: 2, reason: "Bluetooth is designed for short-range, low-power connections between peripheral devices." },
+            { q: "What hardware connects devices in a local Wi-Fi network to the broader Internet?", opts: ["A cell tower", "A router", "A Bluetooth adapter", "A DNS server"], ans: 1, reason: "A router acts as a traffic director, connecting your local home network to the Internet." },
+            { q: "Which cellular generation first allowed smooth high-quality video streaming on phones?", opts: ["1G", "2G", "3G", "4G"], ans: 3, reason: "4G introduced the high data transfer rates needed for smooth video streaming and fast internet." },
+            { q: "Which type of encryption uses a single secret key for both encrypting and decrypting?", opts: ["Asymmetric", "Symmetric", "End-to-End", "VPN"], ans: 1, reason: "Symmetric encryption uses one shared secret key to lock and unlock the data." },
+            { q: "What address bar icon suggests a website is secure and encrypting your data?", opts: ["Red warning sign", "Green checkmark", "Padlock icon", "Bold HTTP text"], ans: 2, reason: "A padlock indicates the site uses HTTPS, meaning data traveling to the server is encrypted." },
+            { q: "What is the main purpose of encrypting data?", opts: ["To compress files", "To convert data into an unreadable format to protect from hackers", "To translate URLs", "To boost Wi-Fi range"], ans: 1, reason: "Encryption turns text into unreadable ciphertext to protect it from unauthorized interception." },
+            { q: "What is a major risk of visiting an unsecured website (HTTP)?", opts: ["Losing your IP address", "Hackers intercepting and reading your passwords in plain text", "Computer upgrading to 5G", "Slower load times"], ans: 1, reason: "HTTP sends data in plain text, meaning anyone intercepting the traffic can easily read it." },
+            { q: "Which network uses cell towers to provide coverage over wide areas (up to 40km)?", opts: ["Bluetooth", "Wi-Fi", "LAN", "Cellular Network"], ans: 3, reason: "Cellular networks use tall towers to broadcast signals across large areas, unlike Wi-Fi or Bluetooth." }
+        ];
+
+        // Keywords have a "name" to display, and "words" (synonyms/variants) to check for.
+        const saqData = [
+            { 
+                q: "What is the main difference between an IP address and a URL?",
+                keywords: [{name: "Numbers vs Letters", words: ["number", "numerical", "text", "letters", "words"]}, {name: "Translate/DNS", words: ["translate", "dns", "convert"]}],
+                model: "An IP address is a numerical string that identifies a device, while a URL is a text-based, easy-to-remember address. The DNS translates URLs into IP addresses."
+            },
+            { 
+                q: "Give two examples of when to use Bluetooth instead of Wi-Fi, and explain why.",
+                keywords: [{name: "Short Range", words: ["short", "close", "nearby", "meters"]}, {name: "Peripherals/Examples", words: ["mouse", "keyboard", "headphones", "speaker", "earbuds"]}, {name: "Low Power", words: ["battery", "power", "energy"]}],
+                model: "You would use Bluetooth to connect wireless headphones or a mouse to a laptop. This is because Bluetooth uses less battery power than Wi-Fi and is perfect for devices that are very close together (short range)."
+            },
+            { 
+                q: "Briefly explain the function of a router in a home network.",
+                keywords: [{name: "Connect", words: ["connect", "link", "join"]}, {name: "Internet Access", words: ["internet", "web", "world wide web"]}, {name: "Traffic/Direct", words: ["traffic", "direct", "route", "manage"]}],
+                model: "A router connects all the devices in your home (the local network) to each other, and acts as the gateway to connect them all to the broader Internet. It directs the data traffic where it needs to go."
+            },
+            { 
+                q: "Why is it dangerous to enter a password on a website that starts with HTTP instead of HTTPS?",
+                keywords: [{name: "Plain Text / Unencrypted", words: ["plain text", "not encrypted", "unencrypted"]}, {name: "Hackers/Intercept", words: ["hacker", "steal", "intercept", "see", "read"]}],
+                model: "HTTP does not encrypt data, meaning everything you type (like passwords) is sent in 'plain text'. If a hacker intercepts the network traffic, they can easily read your password."
+            },
+            { 
+                q: "What is the difference between Symmetric and Asymmetric encryption?",
+                keywords: [{name: "Symmetric = 1 Key", words: ["symmetric", "single key", "one key", "same key"]}, {name: "Asymmetric = 2 Keys", words: ["asymmetric", "two keys", "public and private", "pair"]}],
+                model: "Symmetric encryption uses a single, shared key to both lock and unlock data. Asymmetric encryption uses a pair of keys: a public key to lock the data, and a different private key to unlock it."
+            }
+        ];
+
+        const laqData = [
+            { 
+                q: "Describe the step-by-step 'Journey of a Webpage' from typing the URL to the page appearing.",
+                keywords: [{name: "URL / Browser", words: ["url", "browser", "type", "address"]}, {name: "DNS Lookup", words: ["dns", "translate", "ip address"]}, {name: "Server Request", words: ["server", "request", "host"]}, {name: "Data Packets", words: ["packets", "data", "send back"]}],
+                model: "1. You type the URL into your browser. 2. The browser contacts the DNS to translate the URL into a numerical IP address. 3. The browser sends a request to the web server at that IP address. 4. The server breaks the webpage into data packets and sends them back to your computer. 5. Your browser reassembles the packets to display the page."
+            },
+            { 
+                q: "Compare Wi-Fi and Cellular networks. Mention range, hardware used, and a scenario where one is better.",
+                keywords: [{name: "Wi-Fi: Router/Short Range", words: ["router", "home", "building", "short", "local"]}, {name: "Cellular: Towers/Long Range", words: ["tower", "wide", "kilometers", "far", "long range", "everywhere"]}, {name: "Scenario Comparison", words: ["scenario", "example", "better", "use case"]}],
+                model: "Wi-Fi requires a router and covers a short, local area (like a home or school). It is usually free to use and very fast for heavy downloading. Cellular networks use tall cell towers to provide coverage over wide areas (tens of kilometers). Cellular is better when you are traveling in a car, while Wi-Fi is better when studying at home."
+            },
+            { 
+                q: "Imagine setting up a Smart Home. Explain why you would put your Smart TV on Wi-Fi, but connect your Smartwatch via Bluetooth.",
+                keywords: [{name: "TV / Wi-Fi = High Data", words: ["tv", "video", "stream", "high bandwidth", "fast"]}, {name: "Watch / Bluetooth = Low Power", words: ["watch", "battery", "low power", "energy"]}, {name: "Distance", words: ["phone", "close", "body", "wearable"]}],
+                model: "A Smart TV needs Wi-Fi because streaming movies requires high bandwidth (fast data speeds) and a direct connection to the Internet. A Smartwatch should use Bluetooth because it only needs to send tiny amounts of data (like notifications) to your nearby phone, and using Bluetooth preserves the small battery inside the watch."
+            },
+            { 
+                q: "Explain the 'Mailbox' analogy for Asymmetric Encryption. Why is it highly secure?",
+                keywords: [{name: "Public Key / Slot", words: ["public", "slot", "anyone", "drop"]}, {name: "Private Key / Unlock", words: ["private", "unlock", "open", "only you", "receiver"]}, {name: "Security", words: ["cannot be intercepted", "don't share private", "never sent"]}],
+                model: "In the mailbox analogy, the 'Public Key' is like the mail slot on a post box—anyone can use it to drop a message inside (encrypt it). However, the 'Private Key' is the physical metal key held only by the owner, used to open the box and read the messages (decrypt it). It is secure because the private decryption key never travels across the network where it could be stolen."
+            },
+            { 
+                q: "How does a VPN (Virtual Private Network) protect your data on public Wi-Fi?",
+                keywords: [{name: "Public Wi-Fi Risk", words: ["public", "unsecured", "cafe", "airport"]}, {name: "Secure Tunnel", words: ["tunnel", "secure", "private pathway"]}, {name: "Encryption", words: ["encrypt", "unreadable", "scramble"]}, {name: "Hide IP", words: ["hide", "mask", "ip address"]}],
+                model: "Public Wi-Fi networks are often unsecured, meaning hackers nearby can intercept traffic. A VPN protects you by creating a secure, encrypted 'tunnel' between your device and the internet. Even if a hacker intercepts your data on the cafe Wi-Fi, the encryption ensures it is completely unreadable. It also hides your real IP address."
+            }
+        ];
+
+        // --- STATE VARIABLES ---
+        let currentSection = 1; // 1: MCQ, 2: SAQ, 3: LAQ
+        let currentIndex = 0;
+        let isAnswered = false;
+
+        // Scores
+        let mcqScore = 0;
+        let saqScoreTotal = 0;
+        let laqScoreTotal = 0;
+
+        // --- DOM ELEMENTS ---
+        const header = document.getElementById('quiz-header');
+        const subtitle = document.getElementById('section-subtitle');
+        const progressBar = document.getElementById('progress-bar');
+        const questionCounter = document.getElementById('question-counter');
+        const questionText = document.getElementById('question-text');
+        
+        const mcqContainer = document.getElementById('mcq-container');
+        const oeContainer = document.getElementById('open-ended-container');
+        const studentAnswerBox = document.getElementById('student-answer');
+        const checkAnswerBtn = document.getElementById('check-answer-btn');
+        
+        const feedbackContainer = document.getElementById('feedback-container');
+        const mcqFeedback = document.getElementById('mcq-feedback');
+        const oeFeedback = document.getElementById('oe-feedback');
+        const nextBtn = document.getElementById('next-btn');
+
+        // --- CORE LOGIC ---
+
+        function updateUI() {
+            isAnswered = false;
+            feedbackContainer.classList.add('hidden');
+            mcqFeedback.classList.add('hidden-section');
+            oeFeedback.classList.add('hidden-section');
+            
+            let currentData, totalInSection;
+
+            if (currentSection === 1) {
+                currentData = mcqData[currentIndex];
+                totalInSection = mcqData.length;
+                header.className = "bg-indigo-600 p-6 text-white text-center transition-colors duration-500";
+                subtitle.textContent = "Part 1: Multiple Choice";
+                
+                mcqContainer.classList.remove('hidden-section');
+                oeContainer.classList.add('hidden-section');
+                buildMCQ(currentData);
+            } 
+            else if (currentSection === 2) {
+                currentData = saqData[currentIndex];
+                totalInSection = saqData.length;
+                header.className = "bg-teal-600 p-6 text-white text-center transition-colors duration-500";
+                subtitle.textContent = "Part 2: Short Answer";
+                
+                mcqContainer.classList.add('hidden-section');
+                oeContainer.classList.remove('hidden-section');
+                studentAnswerBox.value = "";
+                studentAnswerBox.disabled = false;
+                checkAnswerBtn.classList.remove('hidden');
+            } 
+            else if (currentSection === 3) {
+                currentData = laqData[currentIndex];
+                totalInSection = laqData.length;
+                header.className = "bg-purple-600 p-6 text-white text-center transition-colors duration-500";
+                subtitle.textContent = "Part 3: Long Answer";
+                
+                mcqContainer.classList.add('hidden-section');
+                oeContainer.classList.remove('hidden-section');
+                studentAnswerBox.value = "";
+                studentAnswerBox.disabled = false;
+                studentAnswerBox.rows = 7;
+                checkAnswerBtn.classList.remove('hidden');
+            }
+
+            questionText.textContent = currentData.q;
+            questionCounter.textContent = `Question ${currentIndex + 1} of ${totalInSection}`;
+            
+            // Progress Bar (Total 20 questions)
+            const absoluteProgress = ((currentSection - 1) * 5 + (currentSection === 1 ? currentIndex : currentIndex + 5)) / 20 * 100;
+            progressBar.style.width = `${absoluteProgress}%`;
+            
+            // Color progress bar based on section
+            progressBar.className = `h-2 transition-all duration-300 ${currentSection === 1 ? 'bg-indigo-400' : currentSection === 2 ? 'bg-teal-400' : 'bg-purple-400'}`;
+        }
+
+        function buildMCQ(data) {
+            mcqContainer.innerHTML = '';
+            data.opts.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-colors duration-200 text-slate-700 font-medium";
+                btn.innerHTML = `<span class="inline-block w-6 h-6 rounded-full bg-slate-200 text-slate-600 text-center text-sm leading-6 mr-3 font-bold">${String.fromCharCode(65 + index)}</span> ${opt}`;
+                btn.onclick = () => gradeMCQ(index, btn, data);
+                mcqContainer.appendChild(btn);
+            });
+        }
+
+        function gradeMCQ(selectedIndex, selectedBtn, data) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const buttons = mcqContainer.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.classList.remove('hover:border-indigo-500', 'hover:bg-indigo-50', 'cursor-pointer');
+                btn.classList.add('cursor-default', 'opacity-50');
+            });
+
+            selectedBtn.classList.remove('opacity-50');
+            mcqFeedback.classList.remove('hidden-section');
+
+            if (selectedIndex === data.ans) {
+                mcqScore++;
+                selectedBtn.classList.replace('border-slate-200', 'border-green-500');
+                selectedBtn.classList.add('bg-green-50', 'text-green-800');
+                
+                document.getElementById('mcq-title').textContent = "✅ Correct!";
+                document.getElementById('mcq-title').className = "font-bold mb-2 text-lg text-green-700";
+                feedbackContainer.className = "mt-6 p-5 rounded-xl border border-green-200 bg-green-50 fade-in";
+            } else {
+                selectedBtn.classList.replace('border-slate-200', 'border-red-500');
+                selectedBtn.classList.add('bg-red-50', 'text-red-800');
+                
+                // Show right answer
+                buttons[data.ans].classList.remove('opacity-50', 'border-slate-200');
+                buttons[data.ans].classList.add('border-green-500', 'bg-green-50');
+
+                document.getElementById('mcq-title').textContent = "❌ Incorrect";
+                document.getElementById('mcq-title').className = "font-bold mb-2 text-lg text-red-700";
+                feedbackContainer.className = "mt-6 p-5 rounded-xl border border-red-200 bg-red-50 fade-in";
+            }
+
+            document.getElementById('mcq-rationale').textContent = data.reason;
+            feedbackContainer.classList.remove('hidden');
+        }
+
+        // AUTO GRADER LOGIC
+        checkAnswerBtn.onclick = () => {
+            const input = studentAnswerBox.value.trim();
+            if(input.length < 5) {
+                alert("Please type a slightly longer answer before checking!");
+                return;
+            }
+            
+            isAnswered = true;
+            studentAnswerBox.disabled = true;
+            checkAnswerBtn.classList.add('hidden');
+            
+            const data = currentSection === 2 ? saqData[currentIndex] : laqData[currentIndex];
+            const textToAnalyse = input.toLowerCase();
+            
+            let matched = 0;
+            const badgeContainer = document.getElementById('keyword-badges');
+            badgeContainer.innerHTML = '';
+
+            // Keyword Scanning
+            data.keywords.forEach(kwObj => {
+                const isFound = kwObj.words.some(word => textToAnalyse.includes(word.toLowerCase()));
+                
+                const badge = document.createElement('span');
+                if(isFound) {
+                    matched++;
+                    badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200";
+                    badge.innerHTML = `✓ ${kwObj.name}`;
+                } else {
+                    badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-red-100 text-red-700 border border-red-200";
+                    badge.innerHTML = `✗ Missed: ${kwObj.name}`;
+                }
+                badgeContainer.appendChild(badge);
+            });
+
+            // Scoring
+            const scorePercent = Math.round((matched / data.keywords.length) * 100);
+            document.getElementById('oe-score').textContent = `${scorePercent}% Match`;
+            
+            if(scorePercent === 100) document.getElementById('oe-score').className = "px-3 py-1 bg-green-100 font-bold text-lg rounded-lg text-green-700";
+            else if(scorePercent > 0) document.getElementById('oe-score').className = "px-3 py-1 bg-yellow-100 font-bold text-lg rounded-lg text-yellow-700";
+            else document.getElementById('oe-score').className = "px-3 py-1 bg-red-100 font-bold text-lg rounded-lg text-red-700";
+
+            if(currentSection === 2) saqScoreTotal += scorePercent;
+            else laqScoreTotal += scorePercent;
+
+            document.getElementById('model-answer').textContent = data.model;
+            
+            oeFeedback.classList.remove('hidden-section');
+            feedbackContainer.className = "mt-6 p-5 rounded-xl border border-slate-200 bg-white fade-in shadow-sm";
+            feedbackContainer.classList.remove('hidden');
+        };
+
+        // Navigation
+        nextBtn.onclick = () => {
+            const arrLength = currentSection === 1 ? mcqData.length : currentSection === 2 ? saqData.length : laqData.length;
+            
+            currentIndex++;
+            if (currentIndex >= arrLength) {
+                // Next Section
+                currentSection++;
+                currentIndex = 0;
+                
+                if(currentSection > 3) {
+                    showFinalResults();
+                    return;
+                }
+            }
+            updateUI();
+            
+            // Scroll to top of card
+            document.getElementById('main-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        function showFinalResults() {
+            document.getElementById('main-card').classList.add('hidden');
+            const results = document.getElementById('results-container');
+            results.classList.remove('hidden');
+            
+            document.getElementById('final-mcq-score').textContent = `${mcqScore}/10`;
+            document.getElementById('final-sa-score').textContent = `${Math.round(saqScoreTotal / saqData.length)}%`;
+            document.getElementById('final-la-score').textContent = `${Math.round(laqScoreTotal / laqData.length)}%`;
+        }
+
+        // Init
+        updateUI();
+
+    </script>
+</body>
+</html>
