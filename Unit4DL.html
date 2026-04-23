@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapter 4: Managing Your Digital Life - Smart Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade-in { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden-section { display: none; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans p-4 md:p-8 min-h-screen flex flex-col items-center">
+
+    <div class="max-w-4xl w-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-8 mt-4 fade-in" id="main-card">
+        
+        <!-- Header -->
+        <div id="quiz-header" class="bg-indigo-600 p-6 text-white text-center transition-colors duration-500">
+            <h1 class="text-2xl font-bold">Chapter 4: Managing Your Digital Life</h1>
+            <p id="section-subtitle" class="text-indigo-100 mt-1 text-sm font-medium">Part 1: Multiple Choice</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-100 h-2">
+            <div id="progress-bar" class="bg-indigo-400 h-2 transition-all duration-300" style="width: 0%;"></div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="p-6 md:p-10 relative">
+            
+            <div id="question-counter" class="text-sm font-bold text-slate-400 mb-4 tracking-wider uppercase">Question 1 of 10</div>
+            
+            <!-- Question Text -->
+            <h2 id="question-text" class="text-xl font-semibold mb-6 text-slate-800 leading-relaxed"></h2>
+
+            <!-- MCQ Container -->
+            <div id="mcq-container" class="space-y-3 hidden-section"></div>
+
+            <!-- Open Ended Container (Text Area) -->
+            <div id="open-ended-container" class="hidden-section">
+                <textarea id="student-answer" rows="5" class="w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-shadow resize-y text-slate-700" placeholder="Type your detailed answer here..."></textarea>
+                <button id="check-answer-btn" class="mt-4 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors w-full shadow-sm">Check My Answer</button>
+            </div>
+
+            <!-- Instant Feedback Area -->
+            <div id="feedback-container" class="hidden mt-6 p-5 rounded-xl border fade-in">
+                
+                <!-- MCQ Feedback -->
+                <div id="mcq-feedback" class="hidden-section">
+                    <p id="mcq-title" class="font-bold mb-2 text-lg"></p>
+                    <p id="mcq-rationale" class="text-slate-700"></p>
+                </div>
+
+                <!-- Open Ended Feedback -->
+                <div id="oe-feedback" class="hidden-section">
+                    <div class="flex items-center justify-between mb-4 pb-4 border-b border-slate-200/60">
+                        <h3 class="font-bold text-lg text-slate-800">Automated Scoring Result</h3>
+                        <span id="oe-score" class="px-3 py-1 bg-slate-100 font-bold text-lg rounded-lg text-slate-700">0/100</span>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-2">Keyword Analysis:</p>
+                        <div id="keyword-badges" class="flex flex-wrap gap-2"></div>
+                    </div>
+
+                    <div class="bg-blue-50 p-5 rounded-xl border border-blue-100 mt-6">
+                        <p class="text-xs font-bold text-blue-600 uppercase tracking-wider mb-2">Model Answer</p>
+                        <p id="model-answer" class="text-blue-900 text-sm leading-relaxed"></p>
+                    </div>
+                </div>
+
+                <button id="next-btn" class="mt-6 px-6 py-3 bg-slate-800 hover:bg-slate-900 text-white font-medium rounded-xl transition-colors w-full">Next Question ➔</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Results Screen -->
+    <div id="results-container" class="hidden max-w-4xl w-full bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden text-center p-10 fade-in">
+        <h2 class="text-4xl font-bold text-slate-800 mb-3">Quiz Complete!</h2>
+        <p class="text-slate-500 mb-8 text-lg">Great job learning how to manage your digital life safely and efficiently.</p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+            <div class="bg-indigo-50 p-6 rounded-2xl border border-indigo-100">
+                <p class="text-indigo-600 font-bold mb-1 uppercase tracking-wide text-sm">MCQ Score</p>
+                <p class="text-4xl font-bold text-indigo-900" id="final-mcq-score">0/10</p>
+            </div>
+            <div class="bg-rose-50 p-6 rounded-2xl border border-rose-100">
+                <p class="text-rose-600 font-bold mb-1 uppercase tracking-wide text-sm">Short Answer Avg</p>
+                <p class="text-4xl font-bold text-rose-900" id="final-sa-score">0%</p>
+            </div>
+            <div class="bg-fuchsia-50 p-6 rounded-2xl border border-fuchsia-100">
+                <p class="text-fuchsia-600 font-bold mb-1 uppercase tracking-wide text-sm">Long Answer Avg</p>
+                <p class="text-4xl font-bold text-fuchsia-900" id="final-la-score">0%</p>
+            </div>
+        </div>
+        
+        <button onclick="location.reload()" class="px-8 py-4 bg-slate-800 hover:bg-slate-900 text-white font-bold rounded-xl transition-colors shadow-lg">Retake Quiz</button>
+    </div>
+
+    <script>
+        // --- QUIZ DATA ---
+        const mcqData = [
+            { q: "Which of the following is an example of an offline communication tool?", opts: ["An email", "A video call", "A handwritten letter", "An online forum"], ans: 2, reason: "A handwritten letter, face-to-face communication, notice boards, and printed planners are offline communication tools because they do not require the Internet." },
+            { q: "Which collaborative tool is best used to create quizzes, surveys, or feedback forms?", opts: ["Google Docs", "Google Forms", "Canva", "Microsoft Teams"], ans: 1, reason: "Google Forms is used to create quizzes, surveys, and feedback forms, which can easily gather opinions from a large group of people." },
+            { q: "What does the 20-20-20 rule help prevent?", opts: ["Hacking and phishing", "Eye strain from looking at screens", "Cyberbullying", "Device storage from getting full"], ans: 1, reason: "The 20-20-20 rule (looking 20 feet away for 20 seconds every 20 minutes) helps prevent eye strain and keeps your eyes healthy while using digital devices." },
+            { q: "Which of the following creates a 'passive' digital footprint?", opts: ["Posting a selfie on social media", "A website saving your IP address using cookies", "Sending an email to a teacher", "Leaving a comment on a YouTube video"], ans: 1, reason: "A passive digital footprint is created without you actively posting anything. Websites tracking your location or using cookies to save your actions are passive footprints." },
+            { q: "What is the meaning of 'digital etiquette'?", opts: ["Programming a computer", "Displaying good manners and respectful behavior online", "Typing fast and accurately", "Blocking all users on your friends list"], ans: 1, reason: "Digital etiquette means displaying good manners, showing respect to others, thinking before you post, and protecting your personal space online." },
+            { q: "Which of the following is an example of an 'active' digital footprint?", opts: ["A search engine saving your search history", "Uploading a photo to Instagram", "A website tracking how long you stayed on a page", "Receiving a spam email"], ans: 1, reason: "An active digital footprint is created when you intentionally share or post data online, such as uploading a photo or leaving a comment." },
+            { q: "What is an Internet 'troll'?", opts: ["A virus that deletes your files", "A person who posts rude or hurtful comments to upset others", "A helpful chatbot used for online shopping", "A privacy setting that hides your location"], ans: 1, reason: "Trolls are people who behave badly online by posting rude or hurtful comments to provoke others, start arguments, or gain attention." },
+            { q: "Which of the following is a good habit for managing your device's storage?", opts: ["Downloading random apps", "Deleting unused files and old games", "Never turning off the device", "Ignoring software updates"], ans: 1, reason: "Deleting unused files, old games, and apps frees up device storage space, helping the device run faster and more efficiently." },
+            { q: "Why are podcasts considered online media?", opts: ["They are printed on paper", "They are broadcast over traditional radio waves", "They are audio or video episodes downloaded or listened to via the Internet", "They do not require a digital device"], ans: 2, reason: "Podcasts are audio or video episodes discussed on various topics that you listen to or download online using the Internet." },
+            { q: "What does 'two-step verification' (or 2FA) do?", opts: ["Creates two different social media accounts", "Requires you to type your password twice", "Acts like two locks, requiring a password and a secondary code sent to your phone", "Shares your location with two trusted friends"], ans: 2, reason: "Two-step verification adds a second 'lock' to your account, such as a code sent to your phone via SMS, making it much harder for hackers to access your data." }
+        ];
+
+        const saqData = [
+            { 
+                q: "What is the main difference between online and offline media? Give one example of each.",
+                keywords: [{name: "Online = Needs Internet", words: ["online", "internet", "web"]}, {name: "Offline = No Internet", words: ["offline", "no internet", "without internet", "does not need"]}, {name: "Examples", words: ["blog", "podcast", "newspaper", "book", "radio", "magazine"]}],
+                model: "Online media (like blogs or podcasts) requires the Internet to send or receive information. Offline media (like printed newspapers or traditional television) does not require the Internet."
+            },
+            { 
+                q: "Name two collaborative tools you could use for a school project and briefly state what they are used for.",
+                keywords: [{name: "Tool 1", words: ["google docs", "teams", "canva", "google forms"]}, {name: "Tool 2 / Use", words: ["edit", "type", "survey", "design", "video call", "presentation"]}],
+                model: "You could use Google Docs to write and edit a report together in real-time, and Canva to design a presentation or poster together."
+            },
+            { 
+                q: "Explain what a 'passive digital footprint' is and provide one example.",
+                keywords: [{name: "Without Posting", words: ["without posting", "not posting", "no action", "behind the scenes"]}, {name: "Example", words: ["cookies", "ip address", "tracking", "history", "location"]}],
+                model: "A passive digital footprint is the data trail you leave behind without actively posting anything. For example, a website using cookies to track your visits or saving your IP address."
+            },
+            { 
+                q: "List two 'Dos' and two 'Don'ts' for being a responsible digital citizen.",
+                keywords: [{name: "Dos (Polite/Check Facts)", words: ["polite", "respect", "think before", "check facts", "report", "permission"]}, {name: "Don'ts (Caps/Fake News/Overshare)", words: ["don't share personal", "no caps", "shouting", "fake news", "don't post angry", "overshare"]}],
+                model: "Dos: Always use polite language and check facts before sharing. Don'ts: Do not share personal information (like your address) and do not type in ALL CAPS because it seems like shouting."
+            },
+            { 
+                q: "What is 'crowdsourcing'?",
+                keywords: [{name: "Collecting Ideas/Help", words: ["collecting", "gathering", "ideas", "opinions", "help", "information"]}, {name: "Large Group Online", words: ["large group", "people", "online", "internet", "community"]}],
+                model: "Crowdsourcing is the act of collecting ideas, opinions, or help from a large group of people—usually online—to solve a problem or complete a task."
+            },
+            { 
+                q: "Why might you use a 'Restricted' list or block someone on a social media platform?",
+                keywords: [{name: "Stop Unwanted Contact", words: ["stop", "bothering", "rude", "mean", "unwanted", "contact"]}, {name: "Protect Space", words: ["protect", "privacy", "cyberbullying", "safe", "harassment"]}],
+                model: "You might block someone to stop them from sending rude messages, commenting on your posts, or cyberbullying you. This helps protect your privacy and keeps your digital space safe."
+            },
+            { 
+                q: "What is the 20-20-20 rule and why is it used?",
+                keywords: [{name: "20 min / 20 ft / 20 sec", words: ["20 minutes", "20 feet", "20 seconds"]}, {name: "Prevent Eye Strain", words: ["eye strain", "eyes", "rest", "break", "fatigue"]}],
+                model: "The 20-20-20 rule says that every 20 minutes, you should look 20 feet away for 20 seconds. It is used to take eye breaks and prevent eye strain from looking at digital screens."
+            },
+            { 
+                q: "Name two common reasons why a digital device might run out of storage space.",
+                keywords: [{name: "Media (Photos/Videos)", words: ["photos", "videos", "media", "movies", "music"]}, {name: "Apps/Games/Files", words: ["apps", "games", "files", "downloaded", "old"]}],
+                model: "A device might run out of storage because it has too many large photos and videos saved, or because it has old games, downloaded files, and apps that are no longer used."
+            },
+            { 
+                q: "How does 'two-step verification' (2FA) keep your account more secure than just using a password?",
+                keywords: [{name: "Two Locks/Steps", words: ["two locks", "two steps", "extra layer", "second form"]}, {name: "Password + Code", words: ["password", "code", "phone", "sms", "notification", "email"]}],
+                model: "Two-step verification acts like having two locks. It requires your password plus a second step, like a unique code sent to your phone. This makes it much harder for hackers to access your account even if they guess your password."
+            },
+            { 
+                q: "What should you do if someone leaves a mean or hurtful comment on your social media post (trolling)?",
+                keywords: [{name: "Ignore / Block", words: ["ignore", "block", "do not reply", "do not engage"]}, {name: "Report / Tell Adult", words: ["report", "trusted adult", "teacher", "parent"]}],
+                model: "You should not respond or argue with the troll. Instead, you should ignore them, block their account, report their behavior to the website or app, and tell a trusted adult."
+            }
+        ];
+
+        const laqData = [
+            { 
+                q: "Discuss the benefits and risks of using online media. Mention at least two benefits and two risks.",
+                keywords: [{name: "Benefits (Access/Connect)", words: ["benefit", "quick", "access", "connect", "learn", "share", "interactive"]}, {name: "Risks (Fake News/Bullying)", words: ["risk", "fake news", "cyberbullying", "addiction", "distraction", "privacy", "misused"]}],
+                model: "Benefits of online media include quick access to global information and staying connected with friends and family easily. Risks include the spread of fake news or unverified information, the potential for cyberbullying, and spending too much time online leading to distraction and addiction."
+            },
+            { 
+                q: "Explain the difference between an active and a passive digital footprint. How can your digital footprint affect your future reputation?",
+                keywords: [{name: "Active (Intentional)", words: ["active", "intentionally", "post", "share", "upload", "comment"]}, {name: "Passive (Hidden)", words: ["passive", "cookies", "tracking", "ip address", "without knowing", "not posting"]}, {name: "Reputation Impact", words: ["reputation", "employers", "school", "permanent", "future", "trust"]}],
+                model: "An active digital footprint is created when you intentionally post or share things like photos or comments. A passive footprint is created without your direct action, like websites tracking your IP address via cookies. Because footprints are permanent, they can be seen by future employers or schools; a positive footprint builds trust, while a negative one (like trolling) can damage your future reputation."
+            },
+            { 
+                q: "Describe three healthy habits for managing your digital devices and screen time to improve your personal wellbeing.",
+                keywords: [{name: "Screen Breaks (20-20-20)", words: ["20-20-20", "breaks", "eye strain", "rest", "eyes"]}, {name: "Bedtime Rules", words: ["bedtime", "sleep", "30 minutes", "blue light", "turn off"]}, {name: "Balance / Limits", words: ["balance", "physical activities", "time limits", "mindfulness", "notifications", "delete unused"]}],
+                model: "Three healthy habits include: 1) Taking regular screen breaks using the 20-20-20 rule to reduce eye strain. 2) Avoiding screens 30 minutes before bedtime because blue light disrupts sleep. 3) Balancing screen time with physical activities and setting daily time limits on social media to prevent addiction and distraction."
+            },
+            { 
+                q: "Imagine you are working on a group project. Evaluate how using a collaborative tool like Google Docs is more efficient than using offline communication or regular email.",
+                keywords: [{name: "Real-Time / Simultaneous", words: ["real-time", "same time", "simultaneously", "together"]}, {name: "All-in-One Edits", words: ["edit", "comment", "feedback", "direct", "autosave"]}, {name: "Avoid Multiple Versions", words: ["multiple versions", "confusion", "emailing back and forth", "access anywhere"]}],
+                model: "Google Docs allows multiple people to type, edit, and comment on the same document simultaneously in real-time from anywhere. This is much more efficient than offline communication or email, which require sending files back and forth. Emailing causes confusing multiple versions of the same document, whereas collaborative tools keep everything organized in one autosaved file."
+            },
+            { 
+                q: "What is live news, and what are its advantages and disadvantages? Why is it important to verify facts before sharing live news?",
+                keywords: [{name: "Live News & Advantages", words: ["updated", "latest events", "fast", "emergency", "alert", "quick"]}, {name: "Disadvantages (Fake/Biased)", words: ["fake", "unverified", "panic", "bias", "harm", "reputation"]}, {name: "Verify Facts", words: ["verify", "trusted sources", "misinformation", "check", "true"]}],
+                model: "Live news keeps people updated on the latest events quickly, which is a major advantage during emergencies (like weather alerts). However, its disadvantage is that the news can sometimes be unverified, biased, or fake, causing panic or unfairly damaging someone's reputation. It is important to verify facts with trusted sources before sharing to prevent spreading harmful misinformation."
+            }
+        ];
+
+        // --- STATE VARIABLES ---
+        let currentSection = 1; // 1: MCQ, 2: SAQ, 3: LAQ
+        let currentIndex = 0;
+        let isAnswered = false;
+
+        // Scores
+        let mcqScore = 0;
+        let saqScoreTotal = 0;
+        let laqScoreTotal = 0;
+
+        // --- DOM ELEMENTS ---
+        const header = document.getElementById('quiz-header');
+        const subtitle = document.getElementById('section-subtitle');
+        const progressBar = document.getElementById('progress-bar');
+        const questionCounter = document.getElementById('question-counter');
+        const questionText = document.getElementById('question-text');
+        
+        const mcqContainer = document.getElementById('mcq-container');
+        const oeContainer = document.getElementById('open-ended-container');
+        const studentAnswerBox = document.getElementById('student-answer');
+        const checkAnswerBtn = document.getElementById('check-answer-btn');
+        
+        const feedbackContainer = document.getElementById('feedback-container');
+        const mcqFeedback = document.getElementById('mcq-feedback');
+        const oeFeedback = document.getElementById('oe-feedback');
+        const nextBtn = document.getElementById('next-btn');
+
+        // --- CORE LOGIC ---
+
+        function updateUI() {
+            isAnswered = false;
+            feedbackContainer.classList.add('hidden');
+            mcqFeedback.classList.add('hidden-section');
+            oeFeedback.classList.add('hidden-section');
+            
+            let currentData, totalInSection;
+
+            if (currentSection === 1) {
+                currentData = mcqData[currentIndex];
+                totalInSection = mcqData.length;
+                
+                // Section 1 Theme: Indigo
+                header.className = "bg-indigo-600 p-6 text-white text-center transition-colors duration-500";
+                subtitle.textContent = "Part 1: Multiple Choice";
+                
+                mcqContainer.classList.remove('hidden-section');
+                oeContainer.classList.add('hidden-section');
+                buildMCQ(currentData);
+            } 
+            else if (currentSection === 2) {
+                currentData = saqData[currentIndex];
+                totalInSection = saqData.length;
+                
+                // Section 2 Theme: Rose
+                header.className = "bg-rose-500 p-6 text-white text-center transition-colors duration-500";
+                subtitle.textContent = "Part 2: Short Answer";
+                
+                mcqContainer.classList.add('hidden-section');
+                oeContainer.classList.remove('hidden-section');
+                
+                studentAnswerBox.value = "";
+                studentAnswerBox.disabled = false;
+                studentAnswerBox.className = "w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-rose-500 focus:border-rose-500 outline-none transition-shadow resize-y text-slate-700";
+                
+                checkAnswerBtn.className = "mt-4 px-6 py-3 bg-rose-500 hover:bg-rose-600 text-white font-semibold rounded-xl transition-colors w-full shadow-sm";
+                checkAnswerBtn.classList.remove('hidden');
+            } 
+            else if (currentSection === 3) {
+                currentData = laqData[currentIndex];
+                totalInSection = laqData.length;
+                
+                // Section 3 Theme: Fuchsia
+                header.className = "bg-fuchsia-600 p-6 text-white text-center transition-colors duration-500";
+                subtitle.textContent = "Part 3: Long Answer";
+                
+                mcqContainer.classList.add('hidden-section');
+                oeContainer.classList.remove('hidden-section');
+                
+                studentAnswerBox.value = "";
+                studentAnswerBox.disabled = false;
+                studentAnswerBox.rows = 7;
+                studentAnswerBox.className = "w-full p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-fuchsia-500 focus:border-fuchsia-500 outline-none transition-shadow resize-y text-slate-700";
+                
+                checkAnswerBtn.className = "mt-4 px-6 py-3 bg-fuchsia-600 hover:bg-fuchsia-700 text-white font-semibold rounded-xl transition-colors w-full shadow-sm";
+                checkAnswerBtn.classList.remove('hidden');
+            }
+
+            questionText.textContent = currentData.q;
+            questionCounter.textContent = `Question ${currentIndex + 1} of ${totalInSection}`;
+            
+            // Total 25 questions (10 + 10 + 5)
+            const totalPreviousQuestions = currentSection === 1 ? 0 : currentSection === 2 ? 10 : 20;
+            const absoluteProgress = ((totalPreviousQuestions + currentIndex) / 25) * 100;
+            
+            progressBar.style.width = `${absoluteProgress}%`;
+            
+            if (currentSection === 1) progressBar.className = "bg-indigo-400 h-2 transition-all duration-300";
+            else if (currentSection === 2) progressBar.className = "bg-rose-400 h-2 transition-all duration-300";
+            else progressBar.className = "bg-fuchsia-400 h-2 transition-all duration-300";
+        }
+
+        function buildMCQ(data) {
+            mcqContainer.innerHTML = '';
+            data.opts.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = `w-full text-left p-4 rounded-xl border border-slate-200 hover:border-indigo-500 hover:bg-indigo-50 transition-colors duration-200 text-slate-700 font-medium`;
+                btn.innerHTML = `<span class="inline-block w-6 h-6 rounded-full bg-slate-200 text-slate-600 text-center text-sm leading-6 mr-3 font-bold">${String.fromCharCode(65 + index)}</span> ${opt}`;
+                btn.onclick = () => gradeMCQ(index, btn, data);
+                mcqContainer.appendChild(btn);
+            });
+        }
+
+        function gradeMCQ(selectedIndex, selectedBtn, data) {
+            if (isAnswered) return;
+            isAnswered = true;
+
+            const buttons = mcqContainer.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.classList.remove('hover:border-indigo-500', 'hover:bg-indigo-50', 'cursor-pointer');
+                btn.classList.add('cursor-default', 'opacity-50');
+            });
+
+            selectedBtn.classList.remove('opacity-50');
+            mcqFeedback.classList.remove('hidden-section');
+
+            if (selectedIndex === data.ans) {
+                mcqScore++;
+                selectedBtn.classList.replace('border-slate-200', 'border-green-500');
+                selectedBtn.classList.add('bg-green-50', 'text-green-800');
+                
+                document.getElementById('mcq-title').textContent = "✅ Correct!";
+                document.getElementById('mcq-title').className = "font-bold mb-2 text-lg text-green-700";
+                feedbackContainer.className = "mt-6 p-5 rounded-xl border border-green-200 bg-green-50 fade-in";
+            } else {
+                selectedBtn.classList.replace('border-slate-200', 'border-red-500');
+                selectedBtn.classList.add('bg-red-50', 'text-red-800');
+                
+                // Show correct answer
+                buttons[data.ans].classList.remove('opacity-50', 'border-slate-200');
+                buttons[data.ans].classList.add('border-green-500', 'bg-green-50');
+
+                document.getElementById('mcq-title').textContent = "❌ Incorrect";
+                document.getElementById('mcq-title').className = "font-bold mb-2 text-lg text-red-700";
+                feedbackContainer.className = "mt-6 p-5 rounded-xl border border-red-200 bg-red-50 fade-in";
+            }
+
+            document.getElementById('mcq-rationale').textContent = data.reason;
+            feedbackContainer.classList.remove('hidden');
+        }
+
+        // AUTO GRADER LOGIC
+        checkAnswerBtn.onclick = () => {
+            const input = studentAnswerBox.value.trim();
+            if(input.length < 5) {
+                alert("Please type a more detailed answer before checking!");
+                return;
+            }
+            
+            isAnswered = true;
+            studentAnswerBox.disabled = true;
+            checkAnswerBtn.classList.add('hidden');
+            
+            const data = currentSection === 2 ? saqData[currentIndex] : laqData[currentIndex];
+            const textToAnalyse = input.toLowerCase();
+            
+            let matched = 0;
+            const badgeContainer = document.getElementById('keyword-badges');
+            badgeContainer.innerHTML = '';
+
+            // Keyword Scanning
+            data.keywords.forEach(kwObj => {
+                const isFound = kwObj.words.some(word => textToAnalyse.includes(word.toLowerCase()));
+                
+                const badge = document.createElement('span');
+                if(isFound) {
+                    matched++;
+                    badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-green-100 text-green-700 border border-green-200 shadow-sm";
+                    badge.innerHTML = `✓ ${kwObj.name}`;
+                } else {
+                    badge.className = "px-3 py-1 rounded-full text-xs font-bold bg-rose-100 text-rose-700 border border-rose-200 shadow-sm";
+                    badge.innerHTML = `✗ Missed: ${kwObj.name}`;
+                }
+                badgeContainer.appendChild(badge);
+            });
+
+            // Scoring
+            const scorePercent = Math.round((matched / data.keywords.length) * 100);
+            document.getElementById('oe-score').textContent = `${scorePercent}% Match`;
+            
+            if(scorePercent === 100) document.getElementById('oe-score').className = "px-3 py-1 bg-green-100 font-bold text-lg rounded-lg text-green-700";
+            else if(scorePercent > 0) document.getElementById('oe-score').className = "px-3 py-1 bg-amber-100 font-bold text-lg rounded-lg text-amber-700";
+            else document.getElementById('oe-score').className = "px-3 py-1 bg-rose-100 font-bold text-lg rounded-lg text-rose-700";
+
+            // Add to total
+            if(currentSection === 2) saqScoreTotal += scorePercent;
+            else laqScoreTotal += scorePercent;
+
+            document.getElementById('model-answer').textContent = data.model;
+            
+            oeFeedback.classList.remove('hidden-section');
+            feedbackContainer.className = "mt-6 p-6 rounded-xl border border-slate-200 bg-white fade-in shadow-sm";
+            feedbackContainer.classList.remove('hidden');
+        };
+
+        // Navigation
+        nextBtn.onclick = () => {
+            const arrLength = currentSection === 1 ? mcqData.length : currentSection === 2 ? saqData.length : laqData.length;
+            
+            currentIndex++;
+            if (currentIndex >= arrLength) {
+                // Advance to the next section
+                currentSection++;
+                currentIndex = 0;
+                
+                if(currentSection > 3) {
+                    progressBar.style.width = `100%`;
+                    showFinalResults();
+                    return;
+                }
+            }
+            updateUI();
+            
+            // Scroll smoothly back to top of card
+            document.getElementById('main-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
+
+        function showFinalResults() {
+            document.getElementById('main-card').classList.add('hidden');
+            const results = document.getElementById('results-container');
+            results.classList.remove('hidden');
+            
+            document.getElementById('final-mcq-score').textContent = `${mcqScore}/10`;
+            document.getElementById('final-sa-score').textContent = `${Math.round(saqScoreTotal / saqData.length)}%`;
+            document.getElementById('final-la-score').textContent = `${Math.round(laqScoreTotal / laqData.length)}%`;
+        }
+
+        // Init
+        updateUI();
+
+    </script>
+</body>
+</html>
