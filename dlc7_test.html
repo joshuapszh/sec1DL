@@ -127,8 +127,8 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
       <p class="subtitle">Secondary 1 &mdash; Units 1&ndash;4 Assessment &nbsp;|&nbsp; Marshall Cavendish Worktext 7</p>
       <div class="info-grid">
         <div class="info-item"><strong>Duration</strong>1 hour 30 minutes</div>
-        <div class="info-item"><strong>Total marks</strong>60 marks</div>
-        <div class="info-item"><strong>Sections</strong>MCQ · Short Answer · Long Answer</div>
+        <div class="info-item"><strong>Total marks</strong>~155 marks</div>
+        <div class="info-item"><strong>Sections</strong>A: MCQ · B: Short · C: Long</div>
         <div class="info-item"><strong>Units covered</strong>1 · 2 · 3 · 4</div>
       </div>
       <p style="font-size:13px;color:var(--gray-mid);margin-bottom:1rem;line-height:1.6">Answer all questions. Write in complete sentences for short and long answer questions. Your score will be recorded automatically when you submit.</p>
@@ -232,122 +232,124 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 let questions = [
-  // ── UNIT 1: Computer Systems ──────────────────────────────────────────
-  {id:'u1m1',type:'mcq',unit:'Unit 1',
-   text:'What does RAM stand for?',
-   options:['Read-Access Memory','Random-Access Memory','Read-Only Memory','Rapid-Action Memory'],
-   answer:1,marks:1},
-  {id:'u1m2',type:'mcq',unit:'Unit 1',
-   text:'Which type of memory permanently stores the instructions needed to start up a computer and cannot be changed by the user?',
-   options:['RAM','Cache','ROM','Hard disk'],
-   answer:2,marks:1},
-  {id:'u1m3',type:'mcq',unit:'Unit 1',
-   text:'Which of the following is a utility program?',
-   options:['Microsoft Word','Google Chrome','Disk Cleanup','Python'],
-   answer:2,marks:1},
-  {id:'u1m4',type:'mcq',unit:'Unit 1',
-   text:'An operating system (OS) manages memory by allocating RAM to different programs. What happens when you open too many apps and the OS runs out of RAM?',
-   options:['The screen turns off automatically','Apps crash or the device slows down','The ROM is used instead','The CPU works faster to compensate'],
-   answer:1,marks:1},
-  {id:'u1m5',type:'mcq',unit:'Unit 1',
-   text:'Data compression reduces the file size so it takes up less storage space and transfers more quickly. Which of the following is a common compression format for files and folders?',
-   options:['MP4','JPEG','ZIP','PNG'],
-   answer:2,marks:1},
+  // ── UNIT 1: Computer Systems (8 MCQ) ─────────────────────────────────
+  {id:'u1m1',type:'mcq',unit:'Unit 1',text:'What does RAM stand for?',options:['Read-Access Memory','Random-Access Memory','Read-Only Memory','Rapid-Action Memory'],answer:1,marks:1},
+  {id:'u1m2',type:'mcq',unit:'Unit 1',text:'Which type of memory loses all its data when the computer is turned off?',options:['ROM','Hard disk drive','RAM','USB flash drive'],answer:2,marks:1},
+  {id:'u1m3',type:'mcq',unit:'Unit 1',text:'Which of the following is stored in ROM?',options:['A document you are currently typing','Photos saved on your desktop','Start-up instructions for the computer','Apps you have open'],answer:2,marks:1},
+  {id:'u1m4',type:'mcq',unit:'Unit 1',text:'What is the primary role of an operating system?',options:['To create documents and spreadsheets','To manage hardware and software so devices work properly','To browse the Internet','To compress files and folders'],answer:1,marks:1},
+  {id:'u1m5',type:'mcq',unit:'Unit 1',text:'Which of the following is a utility program?',options:['Microsoft Word','Google Chrome','Disk Clean-Up Tool','Python IDLE'],answer:2,marks:1},
+  {id:'u1m6',type:'mcq',unit:'Unit 1',text:'Antivirus software is an example of which type of program?',options:['Application software','Utility program','Operating system','Web browser'],answer:1,marks:1},
+  {id:'u1m7',type:'mcq',unit:'Unit 1',text:'What is data compression?',options:['Deleting files permanently from storage','Reducing file size so it takes up less space and transfers faster','Copying files to a USB drive','Encrypting files to prevent access'],answer:1,marks:1},
+  {id:'u1m8',type:'mcq',unit:'Unit 1',text:'Which of the following best describes why evaluating a digital device is important?',options:['To make the device more expensive','To understand its strengths, weaknesses and how to improve it','To delete all unused applications','To increase its battery consumption'],answer:1,marks:1},
 
-  // ── UNIT 2: Creating and Reviewing Content ────────────────────────────
-  {id:'u2m1',type:'mcq',unit:'Unit 2',
-   text:'In Microsoft Word, which feature allows you to see all edits made to a document, shown in a different colour?',
-   options:['AutoCorrect','Track Changes','Comments','Spell Check'],
-   answer:1,marks:1},
-  {id:'u2m2',type:'mcq',unit:'Unit 2',
-   text:'You searched the Internet and copied a paragraph from a website directly into your report without mentioning the source. This is an example of:',
-   options:['Fair use','Referencing','Plagiarism','Copyright'],
-   answer:2,marks:1},
-  {id:'u2m3',type:'mcq',unit:'Unit 2',
-   text:'Which of the following is the BEST way to search for an exact phrase on the Internet?',
-   options:['Type the words in capital letters','Put the phrase in quotation marks','Add a plus sign before each word','Use only one keyword'],
-   answer:1,marks:1},
-  {id:'u2m4',type:'mcq',unit:'Unit 2',
-   text:'When sharing a Google Doc, which permission level allows another person to read the file but NOT make any changes?',
-   options:['Editor','Owner','Commenter','Viewer'],
-   answer:3,marks:1},
-  {id:'u2m5',type:'mcq',unit:'Unit 2',
-   text:'A copyright is a legal right that protects a person\'s original work. Which of the following actions would likely break copyright law?',
-   options:['Quoting one sentence and naming the author','Downloading a song and selling it without permission','Using a small image for school research and crediting the photographer','Reading a library book and writing a book review'],
-   answer:1,marks:1},
+  // ── UNIT 2: Creating and Reviewing Content (8 MCQ) ───────────────────
+  {id:'u2m1',type:'mcq',unit:'Unit 2',text:'Which feature in Microsoft Word shows all edits made to a document in a different colour?',options:['AutoCorrect','Spell Check','Track Changes','Comment'],answer:2,marks:1},
+  {id:'u2m2',type:'mcq',unit:'Unit 2',text:'To accept a suggested change in Track Changes, which button do you click?',options:['Delete','Reject','Accept','Review'],answer:2,marks:1},
+  {id:'u2m3',type:'mcq',unit:'Unit 2',text:'Which of the following is the BEST way to search for an exact phrase on the Internet?',options:['Type the phrase in capital letters','Place the phrase in quotation marks','Use a plus sign before each word','Search using only one keyword'],answer:1,marks:1},
+  {id:'u2m4',type:'mcq',unit:'Unit 2',text:'You saved your school files on a USB drive that was then lost. Which storage option would have prevented this problem?',options:['Saving on your device desktop','Saving on the school network or cloud storage','Printing all files','Emailing files to yourself'],answer:1,marks:1},
+  {id:'u2m5',type:'mcq',unit:'Unit 2',text:'Which permission level in Google Drive allows a person to read a document but NOT edit it?',options:['Owner','Editor','Commenter','Viewer'],answer:3,marks:1},
+  {id:'u2m6',type:'mcq',unit:'Unit 2',text:'Using someone else\'s work without giving credit is known as:',options:['Fair use','Referencing','Plagiarism','Copyright'],answer:2,marks:1},
+  {id:'u2m7',type:'mcq',unit:'Unit 2',text:'Copyright is a legal right that protects original work. Which action is MOST likely to break copyright law?',options:['Quoting one sentence and naming the author','Downloading a song and selling it without permission','Using an image for school research and crediting the photographer','Reading a library book and writing a summary'],answer:1,marks:1},
+  {id:'u2m8',type:'mcq',unit:'Unit 2',text:'In Google Docs, what does the autosave feature do?',options:['Sends the document to your teacher automatically','Saves your work automatically as you type','Creates a backup copy on a USB drive','Locks the document so no one else can edit'],answer:1,marks:1},
 
-  // ── UNIT 3: Computer Networks ─────────────────────────────────────────
-  {id:'u3m1',type:'mcq',unit:'Unit 3',
-   text:'An IP address is used to identify devices on a network. Which of the following best describes what a URL does?',
-   options:['Stores the webpage content on a server','Provides a human-readable address that points to an IP address','Encrypts data sent between devices','Controls who can access the internet'],
-   answer:1,marks:1},
-  {id:'u3m2',type:'mcq',unit:'Unit 3',
-   text:'Bluetooth has a range of up to 10 metres. Which wireless network type provides the WIDEST coverage area?',
-   options:['Bluetooth','Wi-Fi','Cellular network','LAN'],
-   answer:2,marks:1},
-  {id:'u3m3',type:'mcq',unit:'Unit 3',
-   text:'Which of the following best describes encryption in the context of computer networks?',
-   options:['Speeding up data transfer between devices','Converting data into a code so only authorised users can read it','Connecting multiple devices to a single router','Increasing the storage capacity of a server'],
-   answer:1,marks:1},
-  {id:'u3m4',type:'mcq',unit:'Unit 3',
-   text:'The Domain Name System (DNS) translates URLs into IP addresses. When you type "www.google.com" into a browser, which component processes this to find the correct IP address?',
-   options:['Your Wi-Fi router','The DNS server','Your computer\'s RAM','The URL encoder'],
-   answer:1,marks:1},
-  {id:'u3m5',type:'mcq',unit:'Unit 3',
-   text:'Compared to Bluetooth and Wi-Fi, cellular networks are considered more secure. Which of the following best explains why?',
-   options:['They use a wider range so they are harder to intercept','They require a SIM card and are managed by mobile network operators','They are slower and therefore less attractive to hackers','They only work outdoors where there are fewer people'],
-   answer:1,marks:1},
+  // ── UNIT 3: Computer Networks (7 MCQ) ────────────────────────────────
+  {id:'u3m1',type:'mcq',unit:'Unit 3',text:'An IP address uniquely identifies a device on a network. What does DNS do?',options:['Encrypts data before it is sent','Translates URLs into IP addresses','Connects devices to a printer','Controls how fast data travels'],answer:1,marks:1},
+  {id:'u3m2',type:'mcq',unit:'Unit 3',text:'Which wireless network has the SHORTEST range of about 10 metres?',options:['Wi-Fi','Cellular network','Bluetooth','5G'],answer:2,marks:1},
+  {id:'u3m3',type:'mcq',unit:'Unit 3',text:'What is encryption?',options:['Making files smaller to save storage','Converting data into a code so only authorised users can read it','Deleting temporary files from a device','Connecting two devices wirelessly'],answer:1,marks:1},
+  {id:'u3m4',type:'mcq',unit:'Unit 3',text:'How can you tell that a website is using a secure connection?',options:['The website loads very quickly','The URL begins with HTTPS and there is a padlock icon','The website has a colourful design','The website has no advertisements'],answer:1,marks:1},
+  {id:'u3m5',type:'mcq',unit:'Unit 3',text:'WhatsApp uses end-to-end encryption. What does this mean?',options:['Only WhatsApp employees can read your messages','Messages are deleted after 24 hours automatically','Only the sender and intended recipient can read the messages','Messages are stored on a public server'],answer:2,marks:1},
+  {id:'u3m6',type:'mcq',unit:'Unit 3',text:'Which generation of cellular network can reach data transfer speeds of up to 10 Gbps?',options:['3G','4G','5G','2G'],answer:2,marks:1},
+  {id:'u3m7',type:'mcq',unit:'Unit 3',text:'You are at an airport using public Wi-Fi to do online banking. Why is this risky?',options:['Public Wi-Fi is always very slow','Public Wi-Fi networks may not be secure and others could intercept your data','Banks do not allow online access via Wi-Fi','Airport Wi-Fi blocks banking websites'],answer:1,marks:1},
 
-  // ── UNIT 4: Managing Your Digital Life ───────────────────────────────
-  {id:'u4m1',type:'mcq',unit:'Unit 4',
-   text:'A digital footprint is the trail of information you leave online. Which of the following is an example of a PASSIVE digital footprint?',
-   options:['Posting a comment on a social media post','Sending an email to a friend','A website recording your browsing history without you knowing','Uploading a photo to Instagram'],
-   answer:2,marks:1},
-  {id:'u4m2',type:'mcq',unit:'Unit 4',
-   text:'What does the term "digital etiquette" refer to?',
-   options:['The speed at which you type messages online','Polite and respectful behaviour when communicating online','The rules for setting up a Wi-Fi network','Following copyright laws when downloading files'],
-   answer:1,marks:1},
-  {id:'u4m3',type:'mcq',unit:'Unit 4',
-   text:'Which of the following is a healthy habit for managing screen time?',
-   options:['Keeping your phone on during meals','Using devices for 3 hours without a break','Turning off notifications while studying','Sleeping with the phone next to your pillow'],
-   answer:2,marks:1},
-  {id:'u4m4',type:'mcq',unit:'Unit 4',
-   text:'Your device storage is nearly full. Which of the following actions would BEST free up storage space?',
-   options:['Restarting the device','Installing a new app','Deleting unused apps and compressing large files','Turning off Wi-Fi'],
-   answer:2,marks:1},
-  {id:'u4m5',type:'mcq',unit:'Unit 4',
-   text:'Which of the following is an example of online media?',
-   options:['A printed newspaper','A library book','A live news stream on a website','A CD-ROM encyclopedia'],
-   answer:2,marks:1},
+  // ── UNIT 4: Managing Your Digital Life (7 MCQ) ───────────────────────
+  {id:'u4m1',type:'mcq',unit:'Unit 4',text:'What is a digital footprint?',options:['A type of computer virus','The trail of data and information you leave behind when using the Internet','A method of compressing digital files','A security feature that tracks hackers'],answer:1,marks:1},
+  {id:'u4m2',type:'mcq',unit:'Unit 4',text:'A website records your browsing history without you doing anything. This is an example of which type of digital footprint?',options:['Active digital footprint','Passive digital footprint','Encrypted digital footprint','Deleted digital footprint'],answer:1,marks:1},
+  {id:'u4m3',type:'mcq',unit:'Unit 4',text:'What does "digital etiquette" mean?',options:['The speed at which you type online messages','Rules for setting up a home Wi-Fi network','Polite and respectful behaviour when communicating online','Using only secure websites'],answer:2,marks:1},
+  {id:'u4m4',type:'mcq',unit:'Unit 4',text:'Which of the following is an example of online media?',options:['A printed newspaper','A library book','A live news stream on a website','A CD-ROM encyclopedia'],answer:2,marks:1},
+  {id:'u4m5',type:'mcq',unit:'Unit 4',text:'Which of the following is a healthy screen time habit?',options:['Using devices for 3 hours without any break','Keeping notifications on at all times','Turning off all devices at least 30 minutes before bedtime','Sleeping with your phone beside your pillow'],answer:2,marks:1},
+  {id:'u4m6',type:'mcq',unit:'Unit 4',text:'Your device storage is nearly full. Which action BEST frees up space?',options:['Restarting the device','Installing a new operating system','Deleting unused apps and compressing large files','Turning off Wi-Fi'],answer:2,marks:1},
+  {id:'u4m7',type:'mcq',unit:'Unit 4',text:'Which of the following is a collaborative online tool that allows multiple users to work on the same document at the same time?',options:['Microsoft Paint','Google Docs','Windows Notepad','Adobe Acrobat Reader'],answer:1,marks:1},
 
-  // ── SHORT ANSWER ──────────────────────────────────────────────────────
-  {id:'sa1',type:'short',unit:'Unit 1',
-   text:'Explain the difference between RAM and ROM. In your answer, state one characteristic of each type of memory.',
-   marks:4,
-   rubric:'Award 1 mark each for: (1) RAM is temporary/volatile — loses data when power is off; (2) RAM stores data for programs currently running; (3) ROM is permanent/non-volatile — retains data when power is off; (4) ROM stores boot/startup instructions. Max 4 marks.'},
-  {id:'sa2',type:'short',unit:'Unit 2',
-   text:'State two ways plagiarism can happen when doing research online, and explain one consequence a student might face if caught plagiarising at school.',
-   marks:3,
-   rubric:'1 mark each for two valid examples of plagiarism (copying word-for-word, paraphrasing without credit, using an image without permission, taking ideas without citing source). 1 mark for a valid consequence (lower grade, redo work, suspension, expelled, damaged reputation). Max 3 marks.'},
-  {id:'sa3',type:'short',unit:'Unit 3',
-   text:'Compare Wi-Fi and Bluetooth by stating one similarity and two differences between them.',
-   marks:3,
-   rubric:'1 mark: valid similarity (both are wireless, both use radio waves, both connect devices). 1 mark each for two correct differences from: range (Wi-Fi 30-100m vs Bluetooth up to 10m), speed (Wi-Fi up to 1Gbps vs Bluetooth up to 1Mbps), security (Wi-Fi more secure than Bluetooth), number of devices supported. Max 3 marks.'},
-  {id:'sa4',type:'short',unit:'Unit 4',
-   text:'Explain what a digital footprint is and give two examples of actions that would add to your digital footprint.',
-   marks:3,
-   rubric:'1 mark: correct definition — the trail of data/information left online through your activities. 1 mark each for two valid examples (posting on social media, sending emails, searching online, websites tracking your visits, making purchases online, uploading photos). Max 3 marks.'},
+  // ── UNIT 1: Short Answer (6 questions) ───────────────────────────────
+  {id:'u1s1',type:'short',unit:'Unit 1',text:'State ONE difference between RAM and ROM.',marks:2,
+   rubric:'1 mark: RAM is temporary/volatile (loses data when power off) vs ROM is permanent/non-volatile. 1 mark: RAM stores currently running programs vs ROM stores start-up/boot instructions. Accept any one clear correct difference for 2 marks if well explained.'},
+  {id:'u1s2',type:'short',unit:'Unit 1',text:'Give TWO examples of utility programs and state what each one does.',marks:4,
+   rubric:'1 mark per utility program named (max 2), 1 mark per correct function described (max 2). Accept: Disk Clean-Up (removes temporary/unnecessary files), Antivirus (detects/removes malware and viruses), Backup Software (creates copies of files for recovery), Data Compression Tools (reduces file size). Max 4 marks.'},
+  {id:'u1s3',type:'short',unit:'Unit 1',text:'Explain why data compression is useful. Give ONE example of when you would use it.',marks:3,
+   rubric:'1 mark: reduces file size. 1 mark: saves storage space OR allows faster transfer/upload. 1 mark: valid example (sending email attachments, uploading photos to social media, sharing homework files, storing videos). Max 3 marks.'},
+  {id:'u1s4',type:'short',unit:'Unit 1',text:'State THREE tasks carried out by an operating system.',marks:3,
+   rubric:'1 mark each for any 3 correct tasks: provides user interface, manages input/output devices, manages memory/RAM, launches applications, runs multiple applications simultaneously, manages user accounts and security, manages files, detects and fixes errors. Max 3 marks.'},
+  {id:'u1s5',type:'short',unit:'Unit 1',text:'A student is choosing between a laptop with 8 GB of RAM and one with 16 GB of RAM, both at the same price. Explain which one you would recommend and why.',marks:3,
+   rubric:'1 mark: recommends 16 GB RAM. 1 mark: because more RAM allows more programs to run smoothly at the same time. 1 mark: without enough RAM, the device slows down or apps crash when many are open. Accept other valid reasoning. Max 3 marks.'},
+  {id:'u1s6',type:'short',unit:'Unit 1',text:'Describe what "evaluating a digital device" means and explain why it is important.',marks:2,
+   rubric:'1 mark: evaluating means assessing/reviewing the design, features, strengths and weaknesses of a device. 1 mark: it is important to understand how well it meets user needs, identify improvements, or decide if it is suitable for a purpose. Max 2 marks.'},
 
-  // ── LONG ANSWER ───────────────────────────────────────────────────────
-  {id:'la1',type:'long',unit:'Units 1–4',
-   text:'A school is considering giving every Secondary 1 student a tablet device to use in all lessons. Using your knowledge from Units 1–4, discuss the benefits and drawbacks of this decision. In your answer, you should: (a) identify at least two benefits and two drawbacks, and (b) give your recommendation, explaining your reasoning.',
-   marks:8,
-   rubric:'Mark holistically out of 8. Band 3 (7-8): Well-structured; specific, accurate benefits (e.g. access to online resources, collaborative tools like Google Docs, saves paper, interactive learning) AND drawbacks (distraction, cyberbullying/safety risks, digital footprint concerns, device management, storage limits, cost, health/screen time); clear, reasoned recommendation. Band 2 (4-6): Some valid points on both sides; some structure; recommendation present but less detailed. Band 1 (1-3): Only one side, or very vague points; weak or no recommendation. Reward use of unit-specific vocabulary (RAM, OS, network, digital footprint, etiquette, compression, etc.) with 1 bonus mark up to 8.'},
-  {id:'la2',type:'long',unit:'Units 1–4',
-   text:'Imagine you are advising a younger student on how to be safe, responsible and organised online. Using what you have learnt in Units 1–4, write a guide covering at least THREE of the following topics: (i) managing your device and storage, (ii) staying safe and responsible online, (iii) avoiding plagiarism when doing research, (iv) understanding your digital footprint. Your guide should include practical tips for each topic you choose.',
-   marks:8,
-   rubric:'Mark holistically out of 8. Band 3 (7-8): Covers at least 3 topics with specific, accurate, practical advice (e.g. compressing files, deleting unused apps for storage; strong passwords, not sharing personal info, reporting cyberbullying for online safety; citing sources, using quotation marks for plagiarism; thinking before posting for digital footprint). Well-organised as a guide. Appropriate audience tone. Band 2 (4-6): Covers 2-3 topics, advice is mostly correct but less specific. Band 1 (1-3): Only 1 topic, very vague or inaccurate. Award up to 8 marks.'}
-];
+  // ── UNIT 2: Short Answer (6 questions) ───────────────────────────────
+  {id:'u2s1',type:'short',unit:'Unit 2',text:'Explain what the Track Changes feature in Microsoft Word does. Why is it useful when working on a group document?',marks:3,
+   rubric:'1 mark: Track Changes records/shows all edits made to a document in a different colour. 1 mark: other users can see exactly what was changed and who changed it. 1 mark: users can choose to accept or reject each change, making collaboration easier and more transparent. Max 3 marks.'},
+  {id:'u2s2',type:'short',unit:'Unit 2',text:'State TWO advantages of saving school files on cloud storage instead of on a USB drive.',marks:2,
+   rubric:'1 mark each for any 2: accessible from any device with internet, no risk of physical loss, automatic saving, multiple users can collaborate in real time, files saved automatically, can recover older versions. Max 2 marks.'},
+  {id:'u2s3',type:'short',unit:'Unit 2',text:'Explain what plagiarism is and give TWO ways it can happen when doing research online.',marks:4,
+   rubric:'1 mark: using someone else\'s work/ideas without giving credit and presenting it as your own. 1 mark each for 2 valid ways: copying text word-for-word, paraphrasing without crediting, using an image without permission, copying idea/structure without attribution. Max 4 marks (1+1+1+1 or 2+1+1).'},
+  {id:'u2s4',type:'short',unit:'Unit 2',text:'A student finds an article online and wants to use information from it in their project. Describe TWO responsible steps the student should take.',marks:2,
+   rubric:'1 mark each for 2 valid steps: cite/reference the source, paraphrase in own words rather than copy directly, check if the source is reliable/credible, ask for permission if using images, use quotation marks if quoting directly. Max 2 marks.'},
+  {id:'u2s5',type:'short',unit:'Unit 2',text:'In Google Drive, what is the difference between sharing a file as "Editor" and sharing it as "Viewer"? Give ONE situation where you would use each.',marks:4,
+   rubric:'1 mark: Editor can make changes to the file. 1 mark: Viewer can only read/view, cannot edit. 1 mark: valid Editor example (group project where classmates need to add content). 1 mark: valid Viewer example (sharing a finished report with teacher to read). Max 4 marks.'},
+  {id:'u2s6',type:'short',unit:'Unit 2',text:'State what a copyright is. Give ONE example of an action that would break copyright law.',marks:2,
+   rubric:'1 mark: copyright is a legal right protecting a creator\'s original work — only the creator can copy, share or sell it. 1 mark: valid example such as downloading a song and selling it, copying an entire article without permission, using someone\'s photo without credit or payment. Max 2 marks.'},
+
+  // ── UNIT 3: Short Answer (6 questions) ───────────────────────────────
+  {id:'u3s1',type:'short',unit:'Unit 3',text:'Explain what an IP address is and what a URL is. How are the two related?',marks:3,
+   rubric:'1 mark: IP address is a unique set of numbers that identifies a device on a network. 1 mark: URL is a human-readable web address (e.g. www.google.com). 1 mark: DNS translates the URL into its corresponding IP address so the browser can find the right website. Max 3 marks.'},
+  {id:'u3s2',type:'short',unit:'Unit 3',text:'Compare Bluetooth and Wi-Fi by stating ONE similarity and TWO differences.',marks:3,
+   rubric:'1 mark: valid similarity (both are wireless, both use radio waves, both connect devices). 1 mark each for 2 differences: range (Bluetooth up to 10m vs Wi-Fi 30-100m), speed (Bluetooth up to 1Mbps vs Wi-Fi up to 1Gbps), security (Bluetooth lower security than Wi-Fi), devices supported (Bluetooth limited vs Wi-Fi many). Max 3 marks.'},
+  {id:'u3s3',type:'short',unit:'Unit 3',text:'Explain what encryption is. Give ONE real-life example of where encryption is used.',marks:3,
+   rubric:'1 mark: encryption converts data into a code/scrambled form so only authorised users with the correct key can read it. 1 mark: it protects data from being intercepted by hackers/unauthorised users. 1 mark: valid example — WhatsApp messages (end-to-end encryption), online banking/HTTPS websites, logging into school email. Max 3 marks.'},
+  {id:'u3s4',type:'short',unit:'Unit 3',text:'How can you check if a website is secure before entering personal information? State TWO ways.',marks:2,
+   rubric:'1 mark each for: check for HTTPS at the start of the URL, look for the padlock icon in the browser address bar, avoid entering passwords on public Wi-Fi, check the website is from a trusted organisation. Max 2 marks.'},
+  {id:'u3s5',type:'short',unit:'Unit 3',text:'State the main difference between a 4G and a 5G cellular network.',marks:2,
+   rubric:'1 mark: 5G is faster than 4G (5G can reach up to 10 Gbps, much faster than 4G). 1 mark: 5G supports more connected devices / has lower latency / is more suitable for smart devices and IoT. Max 2 marks.'},
+  {id:'u3s6',type:'short',unit:'Unit 3',text:'A student uses the school\'s public Wi-Fi to log into their online bank account. Explain TWO risks of doing this.',marks:4,
+   rubric:'1 mark each for identifying the risk, 1 mark each for explaining the consequence. Risks: (1) Public Wi-Fi may not be encrypted — hackers can intercept the login data / steal the password; (2) Others on the same network could monitor traffic / perform a man-in-the-middle attack. Accept other valid risks with explanation. Max 4 marks.'},
+
+  // ── UNIT 4: Short Answer (7 questions) ───────────────────────────────
+  {id:'u4s1',type:'short',unit:'Unit 4',text:'Explain what a digital footprint is. Give ONE example of an active and ONE example of a passive digital footprint.',marks:3,
+   rubric:'1 mark: digital footprint is the trail of information/data you leave behind when using the Internet. 1 mark: active example — posting on social media, sending an email, uploading a photo. 1 mark: passive example — a website recording your browsing history, cookies tracking your activity without you knowing. Max 3 marks.'},
+  {id:'u4s2',type:'short',unit:'Unit 4',text:'State TWO ways your digital footprint could affect your future opportunities such as scholarships or jobs.',marks:2,
+   rubric:'1 mark each for 2 valid impacts: embarrassing posts could put off employers, negative comments could harm reputation, inappropriate content could disqualify scholarship applications, positive digital footprint (portfolio, projects) could impress employers. Max 2 marks.'},
+  {id:'u4s3',type:'short',unit:'Unit 4',text:'What is digital etiquette? Give TWO examples of practising good digital etiquette online.',marks:3,
+   rubric:'1 mark: digital etiquette is being polite, respectful and responsible when communicating online. 1 mark each for 2 valid examples: using polite language in messages/emails, not sending hurtful comments, not sharing someone\'s private information without permission, responding professionally to messages, not spamming. Max 3 marks.'},
+  {id:'u4s4',type:'short',unit:'Unit 4',text:'Describe TWO differences between online media and offline media. Give ONE example of each.',marks:4,
+   rubric:'1 mark each for 2 valid differences: online media requires internet access vs offline does not; online media is updated in real time vs offline is static; online media allows interaction (comments/likes) vs offline does not; online media can be accessed anywhere vs offline is physical. 1 mark: online example (news website, YouTube, podcast). 1 mark: offline example (printed newspaper, physical book, DVD). Max 4 marks.'},
+  {id:'u4s5',type:'short',unit:'Unit 4',text:'Explain why it is important to organise and manage the storage on your digital device. What happens if you do not?',marks:3,
+   rubric:'1 mark: organising storage helps you find files easily and keeps the device running efficiently. 1 mark: if storage is full, you cannot save new files, install apps or take photos. 1 mark: the device may slow down, freeze or lose important files. Max 3 marks.'},
+  {id:'u4s6',type:'short',unit:'Unit 4',text:'State TWO healthy habits for managing your screen time.',marks:2,
+   rubric:'1 mark each for 2 valid habits: set a screen time limit, take regular breaks (e.g. every 30 minutes), turn off notifications while studying, avoid screens 30 minutes before bed, use screen-free mealtimes, engage in physical activity. Max 2 marks.'},
+  {id:'u4s7',type:'short',unit:'Unit 4',text:'Give TWO advantages of using Google Docs for a group project compared to emailing a Word document back and forth.',marks:2,
+   rubric:'1 mark each for 2 valid advantages: multiple users can edit the same document at the same time, changes are saved automatically, all edits are visible to everyone in real time, no need to send different versions, can access from any device with internet, can use comments and Track Changes collaboratively. Max 2 marks.'},
+
+  // ── LONG ANSWER (10 questions) ────────────────────────────────────────
+  {id:'la1',type:'long',unit:'Units 1–4',text:'A school is planning to give every Secondary 1 student a tablet to use in all lessons, replacing textbooks and exercise books. Using your knowledge from Units 1–4, discuss the benefits and drawbacks of this decision. In your answer: (a) identify at least TWO benefits and TWO drawbacks, and (b) make a recommendation, explaining your reasoning.',marks:8,
+   rubric:'Band 3 (7-8): Specific accurate benefits (e.g. access to online resources, Google Docs collaboration, lighter schoolbag, interactive learning) AND drawbacks (distraction, cyberbullying risk, digital footprint, device management, storage limits, cost, screen time health concerns, need for internet). Clear structured recommendation with reasoning. Unit-specific vocabulary rewarded. Band 2 (4-6): Some valid points both sides, recommendation present. Band 1 (1-3): One-sided or vague. Max 8 marks.'},
+  {id:'la2',type:'long',unit:'Units 1–4',text:'Imagine you are advising a younger student on how to stay safe and responsible online. Write a guide covering at least THREE of the following topics: (i) protecting your digital footprint, (ii) avoiding plagiarism when doing research, (iii) staying safe on computer networks, (iv) using digital devices and storage responsibly. Include practical tips for each topic you choose.',marks:8,
+   rubric:'Band 3 (7-8): Covers 3+ topics with specific, practical, accurate advice. Well-organised as a guide. Appropriate tone for a younger student. Band 2 (4-6): Covers 2-3 topics, mostly correct, less specific. Band 1 (1-3): Only 1 topic or very vague. Max 8 marks.'},
+  {id:'la3',type:'long',unit:'Unit 1',text:'Compare application software and system software. In your answer: (a) define each type with an example, (b) explain the role of the operating system as a type of system software, and (c) explain what would happen if a computer had no system software.',marks:8,
+   rubric:'(a) 2 marks: Application software = programs users run for tasks (e.g. Word, Chrome, games); System software = manages hardware/runs the computer (e.g. Windows, macOS). (b) 2 marks: OS manages hardware and software, provides interface, allocates RAM, manages input/output devices. (c) 2 marks: without system software, hardware cannot function, user cannot interact with the device, applications cannot run. 2 marks: quality of explanation, examples, and use of terminology. Max 8.'},
+  {id:'la4',type:'long',unit:'Unit 2',text:'Your school has a policy that all student projects must be original and properly referenced. Explain: (a) what plagiarism is and why it is considered wrong, (b) the consequences of plagiarism at school and in professional life, and (c) at least THREE steps students can take to avoid plagiarising when doing research online.',marks:8,
+   rubric:'(a) 2 marks: using others\' work without credit, presenting it as your own; wrong because it is dishonest and unfair to original creators. (b) 2 marks: school — lower grade, redo work, suspension/expelled; professional — loss of job, legal action, damaged reputation. (c) 3 marks (1 each): cite sources, paraphrase in own words, use quotation marks for direct quotes, check using plagiarism tools, keep notes of sources while researching. 1 mark: overall coherence. Max 8.'},
+  {id:'la5',type:'long',unit:'Unit 3',text:'Explain how data is kept secure when transmitted over the Internet. In your answer discuss: (a) what encryption is and how it works, (b) the difference between HTTP and HTTPS, and (c) TWO other steps users can take to protect their data when using the Internet.',marks:8,
+   rubric:'(a) 2 marks: encryption scrambles data using a key so only authorised users can read it; decryption key required to decode. (b) 2 marks: HTTP is unsecured, data sent in plain text; HTTPS encrypts data using SSL/TLS, indicated by padlock icon, used for secure websites. (c) 2 marks (1 each): use strong passwords, enable 2FA, avoid public Wi-Fi for sensitive tasks, keep software updated, check for padlock before entering passwords. 2 marks: quality and detail of explanation. Max 8.'},
+  {id:'la6',type:'long',unit:'Unit 3',text:'A new student joins your school and asks you to explain computer networks. Write a clear explanation covering: (a) what a computer network is and why schools use them, (b) the difference between Bluetooth, Wi-Fi and cellular networks, and (c) ONE risk of using wireless networks and how to reduce that risk.',marks:8,
+   rubric:'(a) 2 marks: a network connects devices so they can share files, printers, and the internet; schools use them so students can share resources, access shared drives, collaborate. (b) 3 marks: Bluetooth short range up to 10m low speed; Wi-Fi local area 30-100m up to 1Gbps; Cellular wide area via cell towers, 5G up to 10Gbps. (c) 2 marks: risk e.g. unauthorised access/hacking; mitigation e.g. use strong passwords, encryption, HTTPS sites. 1 mark: clarity and structure. Max 8.'},
+  {id:'la7',type:'long',unit:'Unit 4',text:'Social media is widely used by teenagers. Discuss: (a) TWO benefits and TWO risks of using social media, (b) how using social media contributes to your digital footprint, and (c) at least TWO ways to manage your social media use responsibly.',marks:8,
+   rubric:'(a) 2 marks for benefits (staying connected, sharing information, creative expression, networking) and 2 marks for risks (cyberbullying, privacy exposure, addiction, misinformation, negative mental health). (b) 2 marks: every post, like, comment creates part of your digital footprint; even deleted content may persist as screenshots or backups; affects future reputation. (c) 2 marks: set privacy settings, think before posting, limit screen time, avoid sharing personal info, report cyberbullying. Max 8.'},
+  {id:'la8',type:'long',unit:'Unit 4',text:'Imagine you are the IT manager of a school. Write a digital wellness policy for students covering: (a) healthy screen time habits, (b) responsible online communication (digital etiquette), and (c) safe management of personal data and digital devices. Give specific rules for each section.',marks:8,
+   rubric:'Band 3 (7-8): Three clearly defined sections with specific, realistic rules for each. (a) Screen time: specific breaks, no devices before sleep, etc. (b) Etiquette: respectful language, no cyberbullying, professional emails. (c) Data/devices: strong passwords, do not share login details, regular backups, update software, manage storage. Tone is appropriate for a policy. Band 2 (4-6): Covers all 3 areas but rules are vague. Band 1 (1-3): Missing sections or very superficial. Max 8.'},
+  {id:'la9',type:'long',unit:'Units 1–2',text:'A student wants to create a well-researched, original report on climate change using digital tools. Describe how the student should: (a) search effectively for reliable information online (Unit 2), (b) store and organise their research files (Unit 2), (c) use utility programs to manage their computer while working on the project (Unit 1), and (d) ensure their report is free from plagiarism.',marks:8,
+   rubric:'(a) 2 marks: use quotation marks for exact phrases, use reliable sources (government/educational sites), evaluate credibility of sources. (b) 2 marks: organise files in named folders, use cloud storage for backup and collaboration, name files clearly. (c) 2 marks: use disk clean-up to free space, compress files if needed, use antivirus to stay safe, backup software. (d) 2 marks: paraphrase in own words, cite all sources, use quotation marks for direct quotes. Max 8.'},
+  {id:'la10',type:'long',unit:'Units 3–4',text:'The Internet has transformed the way people communicate and access information. Evaluate BOTH the benefits AND the challenges this has created for young people today. In your answer, refer to at least TWO topics from Unit 3 (Computer Networks) and TWO topics from Unit 4 (Managing Your Digital Life).',marks:8,
+   rubric:'Band 3 (7-8): Balanced evaluation with specific accurate references to Unit 3 content (e.g. wireless networks, encryption, secure websites) and Unit 4 content (e.g. digital footprint, online media, digital etiquette, screen time). Benefits and challenges both well-developed. Strong conclusion. Unit vocabulary used accurately. Band 2 (4-6): References to both units but less specific; some evaluation present. Band 1 (1-3): Very general, minimal unit content referenced. Max 8.'}
+]
 
 let studentName = '', answers = {}, timerInterval = null, secondsLeft = TIMER_SECONDS;
 
@@ -430,7 +432,7 @@ function renderQuestions(){
   const saMarks=sas.reduce((a,q)=>a+q.marks,0);
   const laMarks=las.reduce((a,q)=>a+q.marks,0);
 
-  section('Section A — Multiple Choice Questions ('+mcqs.length+' questions · '+mcqMarks+' marks)','Choose the best answer for each question.');
+  section('Section A — Multiple Choice Questions ('+mcqs.length+' questions · '+mcqMarks+' marks)','Choose the best answer for each question. Each question is worth 1 mark.');
   mcqs.forEach((q,i)=>c.appendChild(buildMCQ(q,i+1)));
 
   section('Section B — Short Answer Questions ('+sas.length+' questions · '+saMarks+' marks)','Answer in complete sentences. Write only what is asked.');
@@ -558,7 +560,7 @@ Reply ONLY with this JSON (no markdown):
   const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+apiKey,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:4000}})
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:8000}})
   });
   if(!resp.ok){
     const errText = await resp.text();
