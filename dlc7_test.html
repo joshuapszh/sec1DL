@@ -540,42 +540,46 @@ async function markAll(){
   const openQs=questions.filter(q=>q.type==='short'||q.type==='long');
   const openTotal=openQs.reduce((a,q)=>a+q.marks,0);
 
-  const prompt=`You are a Secondary 1 Digital Literacy and Computing teacher in Singapore marking a test based on Marshall Cavendish Worktext 7 (Units 1–4: Computer Systems, Creating and Reviewing Content, Computer Networks, Managing Your Digital Life).
+  const prompt=`You are a Sec 1 Digital Literacy teacher in Singapore. Mark the following open-ended questions fairly using the rubric. Be concise but specific in feedback.
 
 Student: ${studentName}
 
-Mark each question carefully using the rubric. Award marks fairly. Be encouraging but accurate.
-
-${openQs.map((q,i)=>`--- Question ${i+1} [${q.marks} marks · ${q.type==='long'?'Long answer':'Short answer'} · ${q.unit}] ---
-Question: ${q.text}
+${openQs.map((q,i)=>`Q${i+1} [${q.marks}marks|${q.type}]
+Q: ${q.text}
 Rubric: ${q.rubric}
-Student answer: "${answers[q.id]||'(no answer provided)'}"
-`).join('\n')}
+Answer: "${(answers[q.id]||'no answer').slice(0,600)}"
+`).join('\n---\n')}
 
-Respond ONLY with valid JSON, no markdown, no preamble:
-{
-  "questions":[
-    {"id":"sa1","score":3,"max":4,"feedback":"Brief specific feedback in 1-2 sentences."},
-    ...
-  ],
-  "overallFeedback":"2-3 sentences of personalised, encouraging feedback addressing strengths and one area to improve."
-}`;
+Reply ONLY with this JSON (no markdown):
+{"questions":[{"id":"sa1","score":2,"max":3,"feedback":"one sentence"},...],"overallFeedback":"2 sentences"}`;
 
   const apiKey = window._apiKey || localStorage.getItem('dlc_gapi_key') || '';
   if(!apiKey) throw new Error('No API key set. Please reload and enter your Google API key.');
   const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+apiKey,{
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.2,maxOutputTokens:1500}})
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:4000}})
   });
   if(!resp.ok){
     const errText = await resp.text();
-    throw new Error('API error '+resp.status+': '+errText.slice(0,200));
+    throw new Error('API error '+resp.status+': '+errText.slice(0,300));
   }
   const data=await resp.json();
-  const raw=(data.candidates?.[0]?.content?.parts?.[0]?.text||'').replace(/```json|```/g,'').trim();
-  if(!raw) throw new Error('Empty response from Gemini. Check your API key.');
-  const ai=JSON.parse(raw);
+  let raw=(data.candidates?.[0]?.content?.parts?.[0]?.text||'').trim();
+  if(!raw) throw new Error('Empty response from Gemini. Check your API key or try again.');
+  // Extract JSON robustly — find first { to last }
+  const jsonStart = raw.indexOf('{');
+  const jsonEnd = raw.lastIndexOf('}');
+  if(jsonStart===-1||jsonEnd===-1) throw new Error('Gemini did not return valid JSON. Raw: '+raw.slice(0,200));
+  raw = raw.slice(jsonStart, jsonEnd+1);
+  let ai;
+  try { ai=JSON.parse(raw); }
+  catch(e) {
+    // Try to salvage truncated JSON by trimming incomplete last entry
+    const truncFix = raw.replace(/,\s*\{[^}]*$/, '') + '\n  ],"overallFeedback":"Marking completed."}';
+    try { ai=JSON.parse(truncFix); }
+    catch(e2) { throw new Error('JSON parse failed: '+e.message+'\nRaw excerpt: '+raw.slice(0,300)); }
+  }
 
   let saScore=0,saTotal=0,laScore=0,laTotal=0,qFeedback={};
   ai.questions.forEach((r,i)=>{
