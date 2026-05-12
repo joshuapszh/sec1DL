@@ -136,6 +136,10 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
         <label style="font-size:13px;font-weight:600;display:block;margin-bottom:5px">&#128273; Google API Key <span style="font-weight:400;color:var(--gray-mid)">(teacher sets this once per device)</span></label>
         <input type="password" id="apiKeyInput" placeholder="AIza..." autocomplete="off" style="font-family:monospace;font-size:13px">
         <p style="font-size:11px;color:var(--gray-mid);margin-top:5px">Key is saved on this device. Students do not need to re-enter it.</p>
+        <div style="margin-top:10px">
+          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:5px">&#128203; Apps Script URL <span style="font-weight:400;color:var(--gray-mid)">(for Google Sheets score logging)</span></label>
+          <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off" style="font-size:12px">
+        </div>
       </div>
       <label style="font-size:13px;font-weight:600;display:block;margin-bottom:7px">Your full name</label>
       <input type="text" id="studentName" placeholder="e.g. Tan Wei Ming" autocomplete="off">
@@ -223,11 +227,16 @@ const TIMER_SECONDS = 90 * 60;
 
 // Pre-load saved API key
 window.addEventListener('DOMContentLoaded', () => {
-  const saved = localStorage.getItem('dlc_gapi_key');
+  const saved = localStorage.getItem('dlc_gapi_key') || localStorage.getItem('dlc_api_key');
   if(saved){
     window._apiKey = saved;
     const inp = document.getElementById('apiKeyInput');
-    if(inp) inp.placeholder = 'Key saved ✓ (leave blank to keep, or paste new key)';
+    if(inp) inp.placeholder = 'API key saved ✓ (leave blank to keep)';
+  }
+  const savedUrl = localStorage.getItem('dlc_script_url');
+  if(savedUrl){
+    const urlInp = document.getElementById('scriptUrlInput');
+    if(urlInp) urlInp.placeholder = 'Apps Script URL saved ✓ (leave blank to keep)';
   }
 });
 
@@ -367,7 +376,11 @@ function startTest(){
     err.textContent = 'Please enter the Google API key (ask your teacher).';
     err.style.display = 'block'; return;
   }
-  // Hide API key section after saving
+  // Save Apps Script URL if provided
+  const scriptUrl = document.getElementById('scriptUrlInput').value.trim();
+  if(scriptUrl) localStorage.setItem('dlc_script_url', scriptUrl);
+
+  // Pre-fill if already saved
   document.getElementById('apiKeySection').style.display = 'none';
 
   const n = document.getElementById('studentName').value.trim();
@@ -661,21 +674,20 @@ async function logToSheet(r){
   };
   console.log('SCORE ROW:',JSON.stringify(row));
 
-  // Try Apps Script endpoint if configured
-  const APPS_SCRIPT_URL = ''; // Paste your Apps Script Web App URL here
+  const APPS_SCRIPT_URL = localStorage.getItem('dlc_script_url') || '';
   if(APPS_SCRIPT_URL){
     try{
-      const params=new URLSearchParams({
-        sheetId:SHEET_ID,
-        data:JSON.stringify(Object.values(row))
-      });
-      await fetch(APPS_SCRIPT_URL+'?'+params.toString(),{method:'GET',mode:'no-cors'});
-      msg.textContent='✓ Score saved to Google Sheets.';
-    }catch(e){
-      msg.textContent='Score logged (sheet sync pending — check console).';
+      const params = new URLSearchParams({ data: JSON.stringify(Object.values(row)) });
+      // no-cors: we can't read the response but the write still happens
+      await fetch(APPS_SCRIPT_URL + '?' + params.toString(), {method:'GET', mode:'no-cors'});
+      msg.textContent = '✓ Score saved to Google Sheets. The teacher can now see your result.';
+    } catch(e) {
+      msg.textContent = 'Score recorded locally. Sheet sync failed — please inform your teacher.';
+      console.error('Sheet sync error:', e);
     }
   } else {
-    msg.textContent='Score recorded. Teacher: check browser console for row data, or configure Apps Script URL.';
+    msg.textContent = '⚠ Apps Script URL not set. Please ask your teacher to configure it.';
+    console.log('SCORE ROW (copy to sheet manually):', JSON.stringify(Object.values(row)));
   }
 }
 
