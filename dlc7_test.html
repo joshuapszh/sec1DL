@@ -90,11 +90,13 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
 .score-card{background:var(--gray-light);border-radius:var(--radius-sm);padding:1rem;text-align:center}
 .score-card .num{font-size:22px;font-weight:700;color:var(--gray)}
 .score-card .lbl{font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--gray-mid);margin-top:3px}
-.feedback-panel{background:var(--blue-light);border-radius:var(--radius);padding:1.25rem;margin:1rem 0;font-size:14px;line-height:1.7;color:var(--blue-dark)}
-.q-result{margin-bottom:8px;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;line-height:1.55}
-.q-result.correct{background:var(--green-light);color:var(--green);border-left:3px solid #639922}
-.q-result.partial{background:var(--amber-light);color:var(--amber);border-left:3px solid #BA7517}
-.q-result.wrong{background:var(--red-light);color:var(--red);border-left:3px solid #E24B4A}
+.feedback-panel{background:var(--blue-light);border-radius:var(--radius);padding:1.25rem;margin:1rem 0;font-size:15px;line-height:1.7;color:var(--blue-dark)}
+.q-result{margin-bottom:12px; padding:16px 20px; border-radius:var(--radius-sm); font-size:15px; line-height:1.55}
+.q-result.correct{background:var(--green-light);color:var(--green);border-left:4px solid #639922}
+.q-result.partial{background:var(--amber-light);color:var(--amber);border-left:4px solid #BA7517}
+.q-result.wrong{background:var(--red-light);color:var(--red);border-left:4px solid #E24B4A}
+.suggested-answer{margin-top:12px; padding:12px; border-radius:6px; background-color:rgba(24, 95, 165, 0.08); font-size:14px; color:var(--blue-dark); border: 1px solid rgba(24, 95, 165, 0.15);}
+.example-answer{margin-top:12px; padding:12px; border-radius:6px; background-color:rgba(59, 109, 17, 0.08); font-size:14px; color:var(--green); border: 1px solid rgba(59, 109, 17, 0.15);}
 
 /* Status */
 .status-msg{text-align:center;font-size:13px;color:var(--gray-mid);padding:1rem}
@@ -120,7 +122,6 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
 <body>
 <div id="app">
 
-  <!-- Welcome Screen -->
   <div id="screen-welcome" class="screen active">
     <div class="welcome-card">
       <h1>Digital Literacy &amp; Computing</h1>
@@ -136,10 +137,6 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
         <label style="font-size:13px;font-weight:600;display:block;margin-bottom:5px">&#128273; Google API Key <span style="font-weight:400;color:var(--gray-mid)">(teacher sets this once per device)</span></label>
         <input type="password" id="apiKeyInput" placeholder="AIza..." autocomplete="off" style="font-family:monospace;font-size:13px">
         <p style="font-size:11px;color:var(--gray-mid);margin-top:5px">Key is saved on this device. Students do not need to re-enter it.</p>
-        <div style="margin-top:10px">
-          <label style="font-size:13px;font-weight:600;display:block;margin-bottom:5px">&#128203; Apps Script URL <span style="font-weight:400;color:var(--gray-mid)">(for Google Sheets score logging)</span></label>
-          <input type="text" id="scriptUrlInput" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off" style="font-size:12px">
-        </div>
       </div>
       <label style="font-size:13px;font-weight:600;display:block;margin-bottom:7px">Your full name</label>
       <input type="text" id="studentName" placeholder="e.g. Tan Wei Ming" autocomplete="off">
@@ -150,7 +147,6 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
     </div>
   </div>
 
-  <!-- Test Screen -->
   <div id="screen-test" class="screen">
     <div class="test-header">
       <div>
@@ -182,7 +178,6 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
     <div id="errorMsg" style="display:none;padding:1rem;border-radius:var(--radius-sm);background:#FCEBEB;border:1px solid #f09595;font-size:14px;color:#A32D2D;margin-bottom:1rem;white-space:pre-wrap"></div>
   </div>
 
-  <!-- Results Screen -->
   <div id="screen-results" class="screen">
     <div class="result-header">
       <div style="font-size:14px;color:var(--gray-mid);margin-bottom:0.5rem" id="resultMeta"></div>
@@ -204,7 +199,6 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
   </div>
 </div>
 
-<!-- Teacher modal -->
 <button class="teacher-btn" onclick="openTeacher()">⚙ Teacher</button>
 <div class="modal-overlay hidden" id="teacherModal">
   <div class="modal">
@@ -222,7 +216,6 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
 </div>
 
 <script>
-const SHEET_ID = '130RWKXKHqv3BJSKl4M6ue8_LV2wnvKR1Wktl4QK_Cqc';
 const TIMER_SECONDS = 90 * 60;
 
 // Pre-load saved API key
@@ -233,131 +226,196 @@ window.addEventListener('DOMContentLoaded', () => {
     const inp = document.getElementById('apiKeyInput');
     if(inp) inp.placeholder = 'API key saved ✓ (leave blank to keep)';
   }
-  const savedUrl = localStorage.getItem('dlc_script_url');
-  if(savedUrl){
-    const urlInp = document.getElementById('scriptUrlInput');
-    if(urlInp) urlInp.placeholder = 'Apps Script URL saved ✓ (leave blank to keep)';
-  }
 });
 
 let questions = [
   // ── UNIT 1: Computer Systems (8 MCQ) ─────────────────────────────────
-  {id:'u1m1',type:'mcq',unit:'Unit 1',text:'What does RAM stand for?',options:['Read-Access Memory','Random-Access Memory','Read-Only Memory','Rapid-Action Memory'],answer:1,marks:1},
-  {id:'u1m2',type:'mcq',unit:'Unit 1',text:'Which type of memory loses all its data when the computer is turned off?',options:['ROM','Hard disk drive','RAM','USB flash drive'],answer:2,marks:1},
-  {id:'u1m3',type:'mcq',unit:'Unit 1',text:'Which of the following is stored in ROM?',options:['A document you are currently typing','Photos saved on your desktop','Start-up instructions for the computer','Apps you have open'],answer:2,marks:1},
-  {id:'u1m4',type:'mcq',unit:'Unit 1',text:'What is the primary role of an operating system?',options:['To create documents and spreadsheets','To manage hardware and software so devices work properly','To browse the Internet','To compress files and folders'],answer:1,marks:1},
-  {id:'u1m5',type:'mcq',unit:'Unit 1',text:'Which of the following is a utility program?',options:['Microsoft Word','Google Chrome','Disk Clean-Up Tool','Python IDLE'],answer:2,marks:1},
-  {id:'u1m6',type:'mcq',unit:'Unit 1',text:'Antivirus software is an example of which type of program?',options:['Application software','Utility program','Operating system','Web browser'],answer:1,marks:1},
-  {id:'u1m7',type:'mcq',unit:'Unit 1',text:'What is data compression?',options:['Deleting files permanently from storage','Reducing file size so it takes up less space and transfers faster','Copying files to a USB drive','Encrypting files to prevent access'],answer:1,marks:1},
-  {id:'u1m8',type:'mcq',unit:'Unit 1',text:'Which of the following best describes why evaluating a digital device is important?',options:['To make the device more expensive','To understand its strengths, weaknesses and how to improve it','To delete all unused applications','To increase its battery consumption'],answer:1,marks:1},
+  {id:'u1m1',type:'mcq',unit:'Unit 1',text:'What does RAM stand for?',options:['Read-Access Memory','Random-Access Memory','Read-Only Memory','Rapid-Action Memory'],answer:1,marks:1, explanation: "Random Access Memory (RAM) acts as the computer's short-term memory that stores data temporarily as electrical signals while the computer is in use."},
+  {id:'u1m2',type:'mcq',unit:'Unit 1',text:'Which type of memory loses all its data when the computer is turned off?',options:['ROM','Hard disk drive','RAM','USB flash drive'],answer:2,marks:1, explanation: "RAM stores data temporarily. Because it relies on active electricity, if the power goes off, those signals disappear and the data is lost, making it 'volatile'."},
+  {id:'u1m3',type:'mcq',unit:'Unit 1',text:'Which of the following is stored in ROM?',options:['A document you are currently typing','Photos saved on your desktop','Start-up instructions for the computer','Apps you have open'],answer:2,marks:1, explanation: "Read-Only Memory (ROM) is the permanent rulebook that tells the hardware what to do when it turns on. It contains the instructions to boot up the system."},
+  {id:'u1m4',type:'mcq',unit:'Unit 1',text:'What is the primary role of an operating system?',options:['To create documents and spreadsheets','To manage hardware and software so devices work properly','To browse the Internet','To compress files and folders'],answer:1,marks:1, explanation: "An operating system acts as the core manager of a device. It controls how the physical hardware and the application software communicate and work together smoothly."},
+  {id:'u1m5',type:'mcq',unit:'Unit 1',text:'Which of the following is a utility program?',options:['Microsoft Word','Google Chrome','Disk Clean-Up Tool','Python IDLE'],answer:2,marks:1, explanation: "Utility programs, like Antivirus or Disk Clean-Up, work in the background to maintain, protect, and optimize the computer's performance."},
+  {id:'u1m6',type:'mcq',unit:'Unit 1',text:'Antivirus software is an example of which type of program?',options:['Application software','Utility program','Operating system','Web browser'],answer:1,marks:1, explanation: "Antivirus software is a utility program because it helps organize files, remove viruses, and maintain the computer's performance in the background."},
+  {id:'u1m7',type:'mcq',unit:'Unit 1',text:'What is data compression?',options:['Deleting files permanently from storage','Reducing file size so it takes up less space and transfers faster','Copying files to a USB drive','Encrypting files to prevent access'],answer:1,marks:1, explanation: "Compression reorganizes data so it fits into a smaller digital footprint. This frees up storage space on the hard drive and allows the file to travel faster over a network."},
+  {id:'u1m8',type:'mcq',unit:'Unit 1',text:'Which of the following best describes why evaluating a digital device is important?',options:['To make the device more expensive','To understand its strengths, weaknesses and how to improve it','To delete all unused applications','To increase its battery consumption'],answer:1,marks:1, explanation: "Evaluating a device means assessing its design and features to understand how well it meets user needs so you can identify improvements."},
 
   // ── UNIT 2: Creating and Reviewing Content (8 MCQ) ───────────────────
-  {id:'u2m1',type:'mcq',unit:'Unit 2',text:'Which feature in Microsoft Word shows all edits made to a document in a different colour?',options:['AutoCorrect','Spell Check','Track Changes','Comment'],answer:2,marks:1},
-  {id:'u2m2',type:'mcq',unit:'Unit 2',text:'To accept a suggested change in Track Changes, which button do you click?',options:['Delete','Reject','Accept','Review'],answer:2,marks:1},
-  {id:'u2m3',type:'mcq',unit:'Unit 2',text:'Which of the following is the BEST way to search for an exact phrase on the Internet?',options:['Type the phrase in capital letters','Place the phrase in quotation marks','Use a plus sign before each word','Search using only one keyword'],answer:1,marks:1},
-  {id:'u2m4',type:'mcq',unit:'Unit 2',text:'You saved your school files on a USB drive that was then lost. Which storage option would have prevented this problem?',options:['Saving on your device desktop','Saving on the school network or cloud storage','Printing all files','Emailing files to yourself'],answer:1,marks:1},
-  {id:'u2m5',type:'mcq',unit:'Unit 2',text:'Which permission level in Google Drive allows a person to read a document but NOT edit it?',options:['Owner','Editor','Commenter','Viewer'],answer:3,marks:1},
-  {id:'u2m6',type:'mcq',unit:'Unit 2',text:'Using someone else\'s work without giving credit is known as:',options:['Fair use','Referencing','Plagiarism','Copyright'],answer:2,marks:1},
-  {id:'u2m7',type:'mcq',unit:'Unit 2',text:'Copyright is a legal right that protects original work. Which action is MOST likely to break copyright law?',options:['Quoting one sentence and naming the author','Downloading a song and selling it without permission','Using an image for school research and crediting the photographer','Reading a library book and writing a summary'],answer:1,marks:1},
-  {id:'u2m8',type:'mcq',unit:'Unit 2',text:'In Google Docs, what does the autosave feature do?',options:['Sends the document to your teacher automatically','Saves your work automatically as you type','Creates a backup copy on a USB drive','Locks the document so no one else can edit'],answer:1,marks:1},
+  {id:'u2m1',type:'mcq',unit:'Unit 2',text:'Which feature in Microsoft Word shows all edits made to a document in a different colour?',options:['AutoCorrect','Spell Check','Track Changes','Comment'],answer:2,marks:1, explanation: "Track Changes records every edit made to a document and highlights them in a different colour to create transparency in group work."},
+  {id:'u2m2',type:'mcq',unit:'Unit 2',text:'To accept a suggested change in Track Changes, which button do you click?',options:['Delete','Reject','Accept','Review'],answer:2,marks:1, explanation: "You can click 'Accept' to keep a suggested change. The change will no longer be highlighted and will become part of the final document."},
+  {id:'u2m3',type:'mcq',unit:'Unit 2',text:'Which of the following is the BEST way to search for an exact phrase on the Internet?',options:['Type the phrase in capital letters','Place the phrase in quotation marks','Use a plus sign before each word','Search using only one keyword'],answer:1,marks:1, explanation: "Using quotation marks around a phrase forces the search engine to look for those exact words in that exact order, filtering out irrelevant results."},
+  {id:'u2m4',type:'mcq',unit:'Unit 2',text:'You saved your school files on a USB drive that was then lost. Which storage option would have prevented this problem?',options:['Saving on your device desktop','Saving on the school network or cloud storage','Printing all files','Emailing files to yourself'],answer:1,marks:1, explanation: "Physical storage like USB drives can be lost or broken. Saving on a school network or cloud storage keeps files on secure, remote servers."},
+  {id:'u2m5',type:'mcq',unit:'Unit 2',text:'Which permission level in Google Drive allows a person to read a document but NOT edit it?',options:['Owner','Editor','Commenter','Viewer'],answer:3,marks:1, explanation: "The 'Viewer' permission allows a user to read a file, but prevents them from making edits or leaving comments."},
+  {id:'u2m6',type:'mcq',unit:'Unit 2',text:'Using someone else\'s work without giving credit is known as:',options:['Fair use','Referencing','Plagiarism','Copyright'],answer:2,marks:1, explanation: "Plagiarism is an ethical issue where you use someone's ideas or work (words, images, creations) without giving them credit and presenting it as your own."},
+  {id:'u2m7',type:'mcq',unit:'Unit 2',text:'Copyright is a legal right that protects original work. Which action is MOST likely to break copyright law?',options:['Quoting one sentence and naming the author','Downloading a song and selling it without permission','Using an image for school research and crediting the photographer','Reading a library book and writing a summary'],answer:1,marks:1, explanation: "Copyright is a legal right. Downloading and selling a song breaks this law because only the creator has the right to copy or sell it unless they give permission."},
+  {id:'u2m8',type:'mcq',unit:'Unit 2',text:'In Google Docs, what does the autosave feature do?',options:['Sends the document to your teacher automatically','Saves your work automatically as you type','Creates a backup copy on a USB drive','Locks the document so no one else can edit'],answer:1,marks:1, explanation: "Autosave automatically saves your work to the cloud as you type, preventing data loss if your computer crashes or the internet cuts out."},
 
   // ── UNIT 3: Computer Networks (7 MCQ) ────────────────────────────────
-  {id:'u3m1',type:'mcq',unit:'Unit 3',text:'An IP address uniquely identifies a device on a network. What does DNS do?',options:['Encrypts data before it is sent','Translates URLs into IP addresses','Connects devices to a printer','Controls how fast data travels'],answer:1,marks:1},
-  {id:'u3m2',type:'mcq',unit:'Unit 3',text:'Which wireless network has the SHORTEST range of about 10 metres?',options:['Wi-Fi','Cellular network','Bluetooth','5G'],answer:2,marks:1},
-  {id:'u3m3',type:'mcq',unit:'Unit 3',text:'What is encryption?',options:['Making files smaller to save storage','Converting data into a code so only authorised users can read it','Deleting temporary files from a device','Connecting two devices wirelessly'],answer:1,marks:1},
-  {id:'u3m4',type:'mcq',unit:'Unit 3',text:'How can you tell that a website is using a secure connection?',options:['The website loads very quickly','The URL begins with HTTPS and there is a padlock icon','The website has a colourful design','The website has no advertisements'],answer:1,marks:1},
-  {id:'u3m5',type:'mcq',unit:'Unit 3',text:'WhatsApp uses end-to-end encryption. What does this mean?',options:['Only WhatsApp employees can read your messages','Messages are deleted after 24 hours automatically','Only the sender and intended recipient can read the messages','Messages are stored on a public server'],answer:2,marks:1},
-  {id:'u3m6',type:'mcq',unit:'Unit 3',text:'Which generation of cellular network can reach data transfer speeds of up to 10 Gbps?',options:['3G','4G','5G','2G'],answer:2,marks:1},
-  {id:'u3m7',type:'mcq',unit:'Unit 3',text:'You are at an airport using public Wi-Fi to do online banking. Why is this risky?',options:['Public Wi-Fi is always very slow','Public Wi-Fi networks may not be secure and others could intercept your data','Banks do not allow online access via Wi-Fi','Airport Wi-Fi blocks banking websites'],answer:1,marks:1},
+  {id:'u3m1',type:'mcq',unit:'Unit 3',text:'An IP address uniquely identifies a device on a network. What does DNS do?',options:['Encrypts data before it is sent','Translates URLs into IP addresses','Connects devices to a printer','Controls how fast data travels'],answer:1,marks:1, explanation: "The Domain Name System (DNS) acts like a contact list, translating the human-readable URL you type into the numerical IP address the computer needs."},
+  {id:'u3m2',type:'mcq',unit:'Unit 3',text:'Which wireless network has the SHORTEST range of about 10 metres?',options:['Wi-Fi','Cellular network','Bluetooth','5G'],answer:2,marks:1, explanation: "Bluetooth uses low-power radio waves to connect personal devices over a very short range, usually up to 10 metres."},
+  {id:'u3m3',type:'mcq',unit:'Unit 3',text:'What is encryption?',options:['Making files smaller to save storage','Converting data into a code so only authorised users can read it','Deleting temporary files from a device','Connecting two devices wirelessly'],answer:1,marks:1, explanation: "Encryption converts readable data (plain text) into an unreadable format (cipher text) so only someone with the correct decryption key can read it."},
+  {id:'u3m4',type:'mcq',unit:'Unit 3',text:'How can you tell that a website is using a secure connection?',options:['The website loads very quickly','The URL begins with HTTPS and there is a padlock icon','The website has a colourful design','The website has no advertisements'],answer:1,marks:1, explanation: "A padlock icon and 'HTTPS' (HyperText Transfer Protocol Secure) in the address bar mean the website uses an encrypted protocol to scramble data."},
+  {id:'u3m5',type:'mcq',unit:'Unit 3',text:'WhatsApp uses end-to-end encryption. What does this mean?',options:['Only WhatsApp employees can read your messages','Messages are deleted after 24 hours automatically','Only the sender and intended recipient can read the messages','Messages are stored on a public server'],answer:2,marks:1, explanation: "End-to-end encryption means that the data is scrambled before it leaves your device, and only the specific person receiving it has the decryption key to unscramble it."},
+  {id:'u3m6',type:'mcq',unit:'Unit 3',text:'Which generation of cellular network can reach data transfer speeds of up to 10 Gbps?',options:['3G','4G','5G','2G'],answer:2,marks:1, explanation: "The 5th generation (5G) of cellular networks significantly increased bandwidth, reaching data transfer speeds of up to 10 Gbps."},
+  {id:'u3m7',type:'mcq',unit:'Unit 3',text:'You are at an airport using public Wi-Fi to do online banking. Why is this risky?',options:['Public Wi-Fi is always very slow','Public Wi-Fi networks may not be secure and others could intercept your data','Banks do not allow online access via Wi-Fi','Airport Wi-Fi blocks banking websites'],answer:1,marks:1, explanation: "Public networks often lack strong encryption. Hackers on the same network could intercept the transmission and steal your passwords or data."},
 
   // ── UNIT 4: Managing Your Digital Life (7 MCQ) ───────────────────────
-  {id:'u4m1',type:'mcq',unit:'Unit 4',text:'What is a digital footprint?',options:['A type of computer virus','The trail of data and information you leave behind when using the Internet','A method of compressing digital files','A security feature that tracks hackers'],answer:1,marks:1},
-  {id:'u4m2',type:'mcq',unit:'Unit 4',text:'A website records your browsing history without you doing anything. This is an example of which type of digital footprint?',options:['Active digital footprint','Passive digital footprint','Encrypted digital footprint','Deleted digital footprint'],answer:1,marks:1},
-  {id:'u4m3',type:'mcq',unit:'Unit 4',text:'What does "digital etiquette" mean?',options:['The speed at which you type online messages','Rules for setting up a home Wi-Fi network','Polite and respectful behaviour when communicating online','Using only secure websites'],answer:2,marks:1},
-  {id:'u4m4',type:'mcq',unit:'Unit 4',text:'Which of the following is an example of online media?',options:['A printed newspaper','A library book','A live news stream on a website','A CD-ROM encyclopedia'],answer:2,marks:1},
-  {id:'u4m5',type:'mcq',unit:'Unit 4',text:'Which of the following is a healthy screen time habit?',options:['Using devices for 3 hours without any break','Keeping notifications on at all times','Turning off all devices at least 30 minutes before bedtime','Sleeping with your phone beside your pillow'],answer:2,marks:1},
-  {id:'u4m6',type:'mcq',unit:'Unit 4',text:'Your device storage is nearly full. Which action BEST frees up space?',options:['Restarting the device','Installing a new operating system','Deleting unused apps and compressing large files','Turning off Wi-Fi'],answer:2,marks:1},
-  {id:'u4m7',type:'mcq',unit:'Unit 4',text:'Which of the following is a collaborative online tool that allows multiple users to work on the same document at the same time?',options:['Microsoft Paint','Google Docs','Windows Notepad','Adobe Acrobat Reader'],answer:1,marks:1},
-
+  {id:'u4m1',type:'mcq',unit:'Unit 4',text:'What is a digital footprint?',options:['A type of computer virus','The trail of data and information you leave behind when using the Internet','A method of compressing digital files','A security feature that tracks hackers'],answer:1,marks:1, explanation: "Your digital footprint is the trail of data left by your online activities, including things you post and data collected by websites."},
+  {id:'u4m2',type:'mcq',unit:'Unit 4',text:'A website records your browsing history without you doing anything. This is an example of which type of digital footprint?',options:['Active digital footprint','Passive digital footprint','Encrypted digital footprint','Deleted digital footprint'],answer:1,marks:1, explanation: "A 'passive' footprint is data collected without your direct action, like websites tracking your IP address or using cookies to record your browsing history."},
+  {id:'u4m3',type:'mcq',unit:'Unit 4',text:'What does "digital etiquette" mean?',options:['The speed at which you type online messages','Rules for setting up a home Wi-Fi network','Polite and respectful behaviour when communicating online','Using only secure websites'],answer:2,marks:1, explanation: "Digital etiquette involves applying good manners to digital spaces—thinking before you post, treating others with respect, and not using hurtful language."},
+  {id:'u4m4',type:'mcq',unit:'Unit 4',text:'Which of the following is an example of online media?',options:['A printed newspaper','A library book','A live news stream on a website','A CD-ROM encyclopedia'],answer:2,marks:1, explanation: "Online media requires an active internet connection to access information or entertainment, unlike offline media such as printed newspapers or library books."},
+  {id:'u4m5',type:'mcq',unit:'Unit 4',text:'Which of the following is a healthy screen time habit?',options:['Using devices for 3 hours without any break','Keeping notifications on at all times','Turning off all devices at least 30 minutes before bedtime','Sleeping with your phone beside your pillow'],answer:2,marks:1, explanation: "The blue light emitted by screens can interfere with your brain's ability to fall asleep. Unplugging 30 minutes before bed is a key part of digital mindfulness."},
+  {id:'u4m6',type:'mcq',unit:'Unit 4',text:'Your device storage is nearly full. Which action BEST frees up space?',options:['Restarting the device','Installing a new operating system','Deleting unused apps and compressing large files','Turning off Wi-Fi'],answer:2,marks:1, explanation: "Digital devices have a storage limit. Deleting unused apps and compressing files frees up space so the operating system does not slow down or freeze."},
+  {id:'u4m7',type:'mcq',unit:'Unit 4',text:'Which of the following is a collaborative online tool that allows multiple users to work on the same document at the same time?',options:['Microsoft Paint','Google Docs','Windows Notepad','Adobe Acrobat Reader'],answer:1,marks:1, explanation: "Collaborative cloud tools like Google Docs allow multiple users from different locations to view and edit the exact same document simultaneously."}
+  
   // ── UNIT 1: Short Answer (6 questions) ───────────────────────────────
-  {id:'u1s1',type:'short',unit:'Unit 1',text:'State ONE difference between RAM and ROM.',marks:2,
-   rubric:'1 mark: RAM is temporary/volatile (loses data when power off) vs ROM is permanent/non-volatile. 1 mark: RAM stores currently running programs vs ROM stores start-up/boot instructions. Accept any one clear correct difference for 2 marks if well explained.'},
+  ,{id:'u1s1',type:'short',unit:'Unit 1',text:'State ONE difference between RAM and ROM.',marks:2,
+   rubric:'1 mark: RAM is temporary/volatile (loses data when power off) vs ROM is permanent/non-volatile. 1 mark: RAM stores currently running programs vs ROM stores start-up/boot instructions. Accept any one clear correct difference for 2 marks if well explained.',
+   suggestedAnswer: 'RAM is temporary/volatile (loses data when power is turned off), whereas ROM is permanent/non-volatile. Also, RAM stores currently running programs, while ROM stores start-up/boot instructions.',
+   exampleAnswer: 'RAM is a temporary memory that loses its data when the computer turns off, while ROM is a permanent memory that stores the computer\'s startup instructions.'},
   {id:'u1s2',type:'short',unit:'Unit 1',text:'Give TWO examples of utility programs and state what each one does.',marks:4,
-   rubric:'1 mark per utility program named (max 2), 1 mark per correct function described (max 2). Accept: Disk Clean-Up (removes temporary/unnecessary files), Antivirus (detects/removes malware and viruses), Backup Software (creates copies of files for recovery), Data Compression Tools (reduces file size). Max 4 marks.'},
+   rubric:'1 mark per utility program named (max 2), 1 mark per correct function described (max 2). Accept: Disk Clean-Up (removes temporary/unnecessary files), Antivirus (detects/removes malware and viruses), Backup Software (creates copies of files for recovery), Data Compression Tools (reduces file size). Max 4 marks.',
+   suggestedAnswer: 'Disk Clean-Up: Removes temporary/unnecessary files. Antivirus: Detects and removes malware/viruses. Backup Software: Creates copies of files for recovery. Data Compression Tools: Reduces file sizes.',
+   exampleAnswer: '1. Antivirus software: scans for and removes computer viruses. 2. Data Compression Tools: reduces the file size of documents so they take up less space.'},
   {id:'u1s3',type:'short',unit:'Unit 1',text:'Explain why data compression is useful. Give ONE example of when you would use it.',marks:3,
-   rubric:'1 mark: reduces file size. 1 mark: saves storage space OR allows faster transfer/upload. 1 mark: valid example (sending email attachments, uploading photos to social media, sharing homework files, storing videos). Max 3 marks.'},
+   rubric:'1 mark: reduces file size. 1 mark: saves storage space OR allows faster transfer/upload. 1 mark: valid example (sending email attachments, uploading photos to social media, sharing homework files, storing videos). Max 3 marks.',
+   suggestedAnswer: 'It reduces file size, which saves storage space and allows for faster transfer/upload. Example: Sending email attachments, uploading photos to social media, or storing videos.',
+   exampleAnswer: 'Data compression reduces the size of a file so it takes up less storage space and transfers faster. I would use it when emailing a folder of large photos.'},
   {id:'u1s4',type:'short',unit:'Unit 1',text:'State THREE tasks carried out by an operating system.',marks:3,
-   rubric:'1 mark each for any 3 correct tasks: provides user interface, manages input/output devices, manages memory/RAM, launches applications, runs multiple applications simultaneously, manages user accounts and security, manages files, detects and fixes errors. Max 3 marks.'},
+   rubric:'1 mark each for any 3 correct tasks: provides user interface, manages input/output devices, manages memory/RAM, launches applications, runs multiple applications simultaneously, manages user accounts and security, manages files, detects and fixes errors. Max 3 marks.',
+   suggestedAnswer: 'Provides a user interface, manages input/output devices, manages memory/RAM, launches applications, runs multiple applications simultaneously, manages user accounts/security, manages files, or detects and fixes errors.',
+   exampleAnswer: 'An operating system manages the computer\'s memory, provides a user interface, and controls hardware devices like printers.'},
   {id:'u1s5',type:'short',unit:'Unit 1',text:'A student is choosing between a laptop with 8 GB of RAM and one with 16 GB of RAM, both at the same price. Explain which one you would recommend and why.',marks:3,
-   rubric:'1 mark: recommends 16 GB RAM. 1 mark: because more RAM allows more programs to run smoothly at the same time. 1 mark: without enough RAM, the device slows down or apps crash when many are open. Accept other valid reasoning. Max 3 marks.'},
+   rubric:'1 mark: recommends 16 GB RAM. 1 mark: because more RAM allows more programs to run smoothly at the same time. 1 mark: without enough RAM, the device slows down or apps crash when many are open. Accept other valid reasoning. Max 3 marks.',
+   suggestedAnswer: 'Recommend the 16 GB RAM laptop because more RAM allows more programs to run smoothly at the same time. Without enough RAM, the device slows down or apps crash when many are open.',
+   exampleAnswer: 'I would recommend the 16 GB RAM laptop. More RAM allows the computer to run more applications at the exact same time without slowing down or freezing.'},
   {id:'u1s6',type:'short',unit:'Unit 1',text:'Describe what "evaluating a digital device" means and explain why it is important.',marks:2,
-   rubric:'1 mark: evaluating means assessing/reviewing the design, features, strengths and weaknesses of a device. 1 mark: it is important to understand how well it meets user needs, identify improvements, or decide if it is suitable for a purpose. Max 2 marks.'},
+   rubric:'1 mark: evaluating means assessing/reviewing the design, features, strengths and weaknesses of a device. 1 mark: it is important to understand how well it meets user needs, identify improvements, or decide if it is suitable for a purpose. Max 2 marks.',
+   suggestedAnswer: 'Evaluating means assessing/reviewing the design, features, strengths, and weaknesses of a device. It is important to understand how well it meets user needs, identify improvements, or decide if it is suitable for a specific purpose.',
+   exampleAnswer: 'Evaluating a digital device means checking its strengths, weaknesses, and features. It is important so you can see if the device meets your needs and find ways to improve its performance.'},
 
   // ── UNIT 2: Short Answer (6 questions) ───────────────────────────────
   {id:'u2s1',type:'short',unit:'Unit 2',text:'Explain what the Track Changes feature in Microsoft Word does. Why is it useful when working on a group document?',marks:3,
-   rubric:'1 mark: Track Changes records/shows all edits made to a document in a different colour. 1 mark: other users can see exactly what was changed and who changed it. 1 mark: users can choose to accept or reject each change, making collaboration easier and more transparent. Max 3 marks.'},
+   rubric:'1 mark: Track Changes records/shows all edits made to a document in a different colour. 1 mark: other users can see exactly what was changed and who changed it. 1 mark: users can choose to accept or reject each change, making collaboration easier and more transparent. Max 3 marks.',
+   suggestedAnswer: 'Track Changes records/shows all edits made to a document in a different color so other users can see exactly what was changed and who changed it. Users can choose to accept or reject each change, making collaboration easier and more transparent.',
+   exampleAnswer: 'Track Changes highlights all the edits made in a document in a different color. It is extremely useful for group work because everyone can see exactly who added or deleted text.'},
   {id:'u2s2',type:'short',unit:'Unit 2',text:'State TWO advantages of saving school files on cloud storage instead of on a USB drive.',marks:2,
-   rubric:'1 mark each for any 2: accessible from any device with internet, no risk of physical loss, automatic saving, multiple users can collaborate in real time, files saved automatically, can recover older versions. Max 2 marks.'},
+   rubric:'1 mark each for any 2: accessible from any device with internet, no risk of physical loss, automatic saving, multiple users can collaborate in real time, files saved automatically, can recover older versions. Max 2 marks.',
+   suggestedAnswer: 'Accessible from any device with the internet, no risk of physical loss, automatic saving, multiple users can collaborate in real-time, and ability to recover older versions.',
+   exampleAnswer: '1. You can access cloud storage files from any device that has the internet. 2. Files are saved automatically online, so there is no risk of losing a physical USB drive.'},
   {id:'u2s3',type:'short',unit:'Unit 2',text:'Explain what plagiarism is and give TWO ways it can happen when doing research online.',marks:4,
-   rubric:'1 mark: using someone else\'s work/ideas without giving credit and presenting it as your own. 1 mark each for 2 valid ways: copying text word-for-word, paraphrasing without crediting, using an image without permission, copying idea/structure without attribution. Max 4 marks (1+1+1+1 or 2+1+1).'},
+   rubric:'1 mark: using someone else\'s work/ideas without giving credit and presenting it as your own. 1 mark each for 2 valid ways: copying text word-for-word, paraphrasing without crediting, using an image without permission, copying idea/structure without attribution. Max 4 marks (1+1+1+1 or 2+1+1).',
+   suggestedAnswer: 'Plagiarism is using someone else\'s work/ideas without giving credit and presenting it as your own. Ways it happens: Copying text word-for-word, paraphrasing without crediting, using an image without permission, or copying an idea/structure without attribution.',
+   exampleAnswer: 'Plagiarism is using someone else\'s original work without giving them credit. It can happen by copying and pasting a paragraph straight from a website, or by using someone\'s image in your report without asking for permission.'},
   {id:'u2s4',type:'short',unit:'Unit 2',text:'A student finds an article online and wants to use information from it in their project. Describe TWO responsible steps the student should take.',marks:2,
-   rubric:'1 mark each for 2 valid steps: cite/reference the source, paraphrase in own words rather than copy directly, check if the source is reliable/credible, ask for permission if using images, use quotation marks if quoting directly. Max 2 marks.'},
+   rubric:'1 mark each for 2 valid steps: cite/reference the source, paraphrase in own words rather than copy directly, check if the source is reliable/credible, ask for permission if using images, use quotation marks if quoting directly. Max 2 marks.',
+   suggestedAnswer: 'Cite/reference the source, paraphrase in their own words rather than copying directly, check if the source is reliable/credible, ask for permission if using images, and use quotation marks if quoting directly.',
+   exampleAnswer: 'The student should paraphrase the information into their own words and include a proper citation at the end to give credit to the original author.'},
   {id:'u2s5',type:'short',unit:'Unit 2',text:'In Google Drive, what is the difference between sharing a file as "Editor" and sharing it as "Viewer"? Give ONE situation where you would use each.',marks:4,
-   rubric:'1 mark: Editor can make changes to the file. 1 mark: Viewer can only read/view, cannot edit. 1 mark: valid Editor example (group project where classmates need to add content). 1 mark: valid Viewer example (sharing a finished report with teacher to read). Max 4 marks.'},
+   rubric:'1 mark: Editor can make changes to the file. 1 mark: Viewer can only read/view, cannot edit. 1 mark: valid Editor example (group project where classmates need to add content). 1 mark: valid Viewer example (sharing a finished report with teacher to read). Max 4 marks.',
+   suggestedAnswer: 'An Editor can make changes to the file, while a Viewer can only read/view it. Editor Example: A group project where classmates need to add content. Viewer Example: Sharing a finished report with a teacher to read.',
+   exampleAnswer: 'An Editor can change and delete text in a file, but a Viewer can only read it without making changes. I would use Editor for a group project so my classmates can help write, and Viewer when sending my final essay to my teacher.'},
   {id:'u2s6',type:'short',unit:'Unit 2',text:'State what a copyright is. Give ONE example of an action that would break copyright law.',marks:2,
-   rubric:'1 mark: copyright is a legal right protecting a creator\'s original work — only the creator can copy, share or sell it. 1 mark: valid example such as downloading a song and selling it, copying an entire article without permission, using someone\'s photo without credit or payment. Max 2 marks.'},
+   rubric:'1 mark: copyright is a legal right protecting a creator\'s original work — only the creator can copy, share or sell it. 1 mark: valid example such as downloading a song and selling it, copying an entire article without permission, using someone\'s photo without credit or payment. Max 2 marks.',
+   suggestedAnswer: 'Copyright is a legal right protecting a creator\'s original work (only they can copy, share, or sell it). Example: Downloading a song and selling it, copying an entire article without permission, or using someone\'s photo without credit/payment.',
+   exampleAnswer: 'Copyright is the legal right of a creator to control how their original work is used or shared. Downloading a movie from the internet and selling it on DVDs for money would break copyright law.'},
 
   // ── UNIT 3: Short Answer (6 questions) ───────────────────────────────
   {id:'u3s1',type:'short',unit:'Unit 3',text:'Explain what an IP address is and what a URL is. How are the two related?',marks:3,
-   rubric:'1 mark: IP address is a unique set of numbers that identifies a device on a network. 1 mark: URL is a human-readable web address (e.g. www.google.com). 1 mark: DNS translates the URL into its corresponding IP address so the browser can find the right website. Max 3 marks.'},
+   rubric:'1 mark: IP address is a unique set of numbers that identifies a device on a network. 1 mark: URL is a human-readable web address (e.g. www.google.com). 1 mark: DNS translates the URL into its corresponding IP address so the browser can find the right website. Max 3 marks.',
+   suggestedAnswer: 'An IP address is a unique set of numbers identifying a device on a network. A URL is a human-readable web address (e.g., www.google.com). The DNS translates the URL into its corresponding IP address so the browser can find the website.',
+   exampleAnswer: 'An IP address is a unique string of numbers identifying a device on a network, while a URL is a readable web address like google.com. They are related because the DNS translates the URL into the IP address so the computer can find the exact site.'},
   {id:'u3s2',type:'short',unit:'Unit 3',text:'Compare Bluetooth and Wi-Fi by stating ONE similarity and TWO differences.',marks:3,
-   rubric:'1 mark: valid similarity (both are wireless, both use radio waves, both connect devices). 1 mark each for 2 differences: range (Bluetooth up to 10m vs Wi-Fi 30-100m), speed (Bluetooth up to 1Mbps vs Wi-Fi up to 1Gbps), security (Bluetooth lower security than Wi-Fi), devices supported (Bluetooth limited vs Wi-Fi many). Max 3 marks.'},
+   rubric:'1 mark: valid similarity (both are wireless, both use radio waves, both connect devices). 1 mark each for 2 differences: range (Bluetooth up to 10m vs Wi-Fi 30-100m), speed (Bluetooth up to 1Mbps vs Wi-Fi up to 1Gbps), security (Bluetooth lower security than Wi-Fi), devices supported (Bluetooth limited vs Wi-Fi many). Max 3 marks.',
+   suggestedAnswer: 'Similarity: Both are wireless / use radio waves / connect devices. Differences: Range (Bluetooth ~10m vs Wi-Fi 30-100m), speed (Bluetooth ~1Mbps vs Wi-Fi ~1Gbps), security (Bluetooth is lower), and devices supported.',
+   exampleAnswer: 'Similarity: Both are wireless networks used to connect devices. Differences: Wi-Fi has a much larger range (up to 100m) than Bluetooth (10m), and Wi-Fi supports much faster data transfer speeds.'},
   {id:'u3s3',type:'short',unit:'Unit 3',text:'Explain what encryption is. Give ONE real-life example of where encryption is used.',marks:3,
-   rubric:'1 mark: encryption converts data into a code/scrambled form so only authorised users with the correct key can read it. 1 mark: it protects data from being intercepted by hackers/unauthorised users. 1 mark: valid example — WhatsApp messages (end-to-end encryption), online banking/HTTPS websites, logging into school email. Max 3 marks.'},
+   rubric:'1 mark: encryption converts data into a code/scrambled form so only authorised users with the correct key can read it. 1 mark: it protects data from being intercepted by hackers/unauthorised users. 1 mark: valid example — WhatsApp messages (end-to-end encryption), online banking/HTTPS websites, logging into school email. Max 3 marks.',
+   suggestedAnswer: 'Encryption converts data into a code/scrambled form so only authorized users with the correct key can read it, protecting it from hackers. Example: WhatsApp messages (end-to-end), online banking (HTTPS), or logging into school email.',
+   exampleAnswer: 'Encryption scrambles data into a secret code so that hackers cannot intercept and read it. It is used in WhatsApp to keep personal messages completely private.'},
   {id:'u3s4',type:'short',unit:'Unit 3',text:'How can you check if a website is secure before entering personal information? State TWO ways.',marks:2,
-   rubric:'1 mark each for: check for HTTPS at the start of the URL, look for the padlock icon in the browser address bar, avoid entering passwords on public Wi-Fi, check the website is from a trusted organisation. Max 2 marks.'},
+   rubric:'1 mark each for: check for HTTPS at the start of the URL, look for the padlock icon in the browser address bar, avoid entering passwords on public Wi-Fi, check the website is from a trusted organisation. Max 2 marks.',
+   suggestedAnswer: 'Check for HTTPS at the start of the URL, look for the padlock icon in the browser address bar, avoid entering passwords on public Wi-Fi, and check that the website is from a trusted organization.',
+   exampleAnswer: '1. Look for "HTTPS" at the very beginning of the web address. 2. Look for the small padlock icon in the browser\'s address bar.'},
   {id:'u3s5',type:'short',unit:'Unit 3',text:'State the main difference between a 4G and a 5G cellular network.',marks:2,
-   rubric:'1 mark: 5G is faster than 4G (5G can reach up to 10 Gbps, much faster than 4G). 1 mark: 5G supports more connected devices / has lower latency / is more suitable for smart devices and IoT. Max 2 marks.'},
+   rubric:'1 mark: 5G is faster than 4G (5G can reach up to 10 Gbps, much faster than 4G). 1 mark: 5G supports more connected devices / has lower latency / is more suitable for smart devices and IoT. Max 2 marks.',
+   suggestedAnswer: '5G is significantly faster than 4G (up to 10 Gbps) and supports more connected devices/has lower latency, making it more suitable for smart devices and IoT.',
+   exampleAnswer: '5G cellular networks are much faster than 4G networks, reaching speeds up to 10 Gbps, and they can support many more smart devices connected at once.'},
   {id:'u3s6',type:'short',unit:'Unit 3',text:'A student uses the school\'s public Wi-Fi to log into their online bank account. Explain TWO risks of doing this.',marks:4,
-   rubric:'1 mark each for identifying the risk, 1 mark each for explaining the consequence. Risks: (1) Public Wi-Fi may not be encrypted — hackers can intercept the login data / steal the password; (2) Others on the same network could monitor traffic / perform a man-in-the-middle attack. Accept other valid risks with explanation. Max 4 marks.'},
+   rubric:'1 mark each for identifying the risk, 1 mark each for explaining the consequence. Risks: (1) Public Wi-Fi may not be encrypted — hackers can intercept the login data / steal the password; (2) Others on the same network could monitor traffic / perform a man-in-the-middle attack. Accept other valid risks with explanation. Max 4 marks.',
+   suggestedAnswer: '1. Public Wi-Fi may not be encrypted, so hackers can intercept the login data/steal the password. 2. Others on the same network could monitor traffic or perform a man-in-the-middle attack.',
+   exampleAnswer: '1. Public Wi-Fi is often not encrypted, meaning hackers could easily intercept and steal the student\'s banking password. 2. Someone could set up a fake Wi-Fi network to monitor the student\'s internet traffic and access their account.'},
 
   // ── UNIT 4: Short Answer (7 questions) ───────────────────────────────
   {id:'u4s1',type:'short',unit:'Unit 4',text:'Explain what a digital footprint is. Give ONE example of an active and ONE example of a passive digital footprint.',marks:3,
-   rubric:'1 mark: digital footprint is the trail of information/data you leave behind when using the Internet. 1 mark: active example — posting on social media, sending an email, uploading a photo. 1 mark: passive example — a website recording your browsing history, cookies tracking your activity without you knowing. Max 3 marks.'},
+   rubric:'1 mark: digital footprint is the trail of information/data you leave behind when using the Internet. 1 mark: active example — posting on social media, sending an email, uploading a photo. 1 mark: passive example — a website recording your browsing history, cookies tracking your activity without you knowing. Max 3 marks.',
+   suggestedAnswer: 'The trail of information/data left behind when using the internet. Active Example: Posting on social media, sending an email, uploading a photo. Passive Example: A website recording browsing history, or cookies tracking activity without the user knowing.',
+   exampleAnswer: 'A digital footprint is the permanent trail of data you leave online. Active footprint: Posting a selfie on Instagram. Passive footprint: A website tracking your location or using cookies without you doing anything.'},
   {id:'u4s2',type:'short',unit:'Unit 4',text:'State TWO ways your digital footprint could affect your future opportunities such as scholarships or jobs.',marks:2,
-   rubric:'1 mark each for 2 valid impacts: embarrassing posts could put off employers, negative comments could harm reputation, inappropriate content could disqualify scholarship applications, positive digital footprint (portfolio, projects) could impress employers. Max 2 marks.'},
+   rubric:'1 mark each for 2 valid impacts: embarrassing posts could put off employers, negative comments could harm reputation, inappropriate content could disqualify scholarship applications, positive digital footprint (portfolio, projects) could impress employers. Max 2 marks.',
+   suggestedAnswer: 'Embarrassing posts could put off employers, negative comments could harm reputation, or inappropriate content could disqualify scholarship applications. Conversely, a positive footprint (portfolio, projects) could impress employers.',
+   exampleAnswer: '1. Posting inappropriate content or complaints could cause a future employer to reject your job application. 2. A positive digital footprint, like sharing a coding project online, could impress a university and help you earn a scholarship.'},
   {id:'u4s3',type:'short',unit:'Unit 4',text:'What is digital etiquette? Give TWO examples of practising good digital etiquette online.',marks:3,
-   rubric:'1 mark: digital etiquette is being polite, respectful and responsible when communicating online. 1 mark each for 2 valid examples: using polite language in messages/emails, not sending hurtful comments, not sharing someone\'s private information without permission, responding professionally to messages, not spamming. Max 3 marks.'},
+   rubric:'1 mark: digital etiquette is being polite, respectful and responsible when communicating online. 1 mark each for 2 valid examples: using polite language in messages/emails, not sending hurtful comments, not sharing someone\'s private information without permission, responding professionally to messages, not spamming. Max 3 marks.',
+   suggestedAnswer: 'Being polite, respectful, and responsible when communicating online. Examples: Using polite language in messages, not sending hurtful comments, not sharing private info without permission, and not spamming.',
+   exampleAnswer: 'Digital etiquette means behaving politely and respectfully online. Two examples are: 1. Not typing in all capital letters because it looks like shouting. 2. Asking for permission before posting a picture of your friend.'},
   {id:'u4s4',type:'short',unit:'Unit 4',text:'Describe TWO differences between online media and offline media. Give ONE example of each.',marks:4,
-   rubric:'1 mark each for 2 valid differences: online media requires internet access vs offline does not; online media is updated in real time vs offline is static; online media allows interaction (comments/likes) vs offline does not; online media can be accessed anywhere vs offline is physical. 1 mark: online example (news website, YouTube, podcast). 1 mark: offline example (printed newspaper, physical book, DVD). Max 4 marks.'},
+   rubric:'1 mark each for 2 valid differences: online media requires internet access vs offline does not; online media is updated in real time vs offline is static; online media allows interaction (comments/likes) vs offline does not; online media can be accessed anywhere vs offline is physical. 1 mark: online example (news website, YouTube, podcast). 1 mark: offline example (printed newspaper, physical book, DVD). Max 4 marks.',
+   suggestedAnswer: 'Online media requires internet access (offline does not); online media is updated in real-time (offline is static); online media allows interaction (offline does not). Online Example: News website, YouTube. Offline Example: Printed newspaper, physical book.',
+   exampleAnswer: 'Online media requires an active internet connection and can be updated instantly, while offline media does not need the internet and cannot be changed once printed. Example of Online: A live news website. Example of Offline: A printed magazine.'},
   {id:'u4s5',type:'short',unit:'Unit 4',text:'Explain why it is important to organise and manage the storage on your digital device. What happens if you do not?',marks:3,
-   rubric:'1 mark: organising storage helps you find files easily and keeps the device running efficiently. 1 mark: if storage is full, you cannot save new files, install apps or take photos. 1 mark: the device may slow down, freeze or lose important files. Max 3 marks.'},
+   rubric:'1 mark: organising storage helps you find files easily and keeps the device running efficiently. 1 mark: if storage is full, you cannot save new files, install apps or take photos. 1 mark: the device may slow down, freeze or lose important files. Max 3 marks.',
+   suggestedAnswer: 'Organizing helps you find files easily and keeps the device running efficiently. If storage is full, you cannot save new files or install apps, and the device may slow down, freeze, or lose important files.',
+   exampleAnswer: 'Managing storage keeps your device running fast and efficiently. If you do not manage it and the storage gets completely full, your device will slow down, freeze, and you will not be able to save any new files.'},
   {id:'u4s6',type:'short',unit:'Unit 4',text:'State TWO healthy habits for managing your screen time.',marks:2,
-   rubric:'1 mark each for 2 valid habits: set a screen time limit, take regular breaks (e.g. every 30 minutes), turn off notifications while studying, avoid screens 30 minutes before bed, use screen-free mealtimes, engage in physical activity. Max 2 marks.'},
+   rubric:'1 mark each for 2 valid habits: set a screen time limit, take regular breaks (e.g. every 30 minutes), turn off notifications while studying, avoid screens 30 minutes before bed, use screen-free mealtimes, engage in physical activity. Max 2 marks.',
+   suggestedAnswer: 'Set a screen time limit, take regular breaks (e.g., every 30 mins), turn off notifications while studying, avoid screens 30 minutes before bed, or engage in physical activity.',
+   exampleAnswer: '1. Stop looking at all screens at least 30 minutes before going to sleep. 2. Follow the 20-20-20 rule to take regular eye breaks while studying.'},
   {id:'u4s7',type:'short',unit:'Unit 4',text:'Give TWO advantages of using Google Docs for a group project compared to emailing a Word document back and forth.',marks:2,
-   rubric:'1 mark each for 2 valid advantages: multiple users can edit the same document at the same time, changes are saved automatically, all edits are visible to everyone in real time, no need to send different versions, can access from any device with internet, can use comments and Track Changes collaboratively. Max 2 marks.'},
+   rubric:'1 mark each for 2 valid advantages: multiple users can edit the same document at the same time, changes are saved automatically, all edits are visible to everyone in real time, no need to send different versions, can access from any device with internet, can use comments and Track Changes collaboratively. Max 2 marks.',
+   suggestedAnswer: 'Multiple users can edit simultaneously, changes are saved automatically, all edits are visible in real-time, there is no need to manage different file versions, and you can access it from any internet-connected device.',
+   exampleAnswer: '1. Multiple people can type in the document at the exact same time online. 2. You don\'t have to constantly save and email different versions back and forth, preventing messy confusion.'},
 
   // ── LONG ANSWER (10 questions) ────────────────────────────────────────
   {id:'la1',type:'long',unit:'Units 1–4',text:'A school is planning to give every Secondary 1 student a tablet to use in all lessons, replacing textbooks and exercise books. Using your knowledge from Units 1–4, discuss the benefits and drawbacks of this decision. In your answer: (a) identify at least TWO benefits and TWO drawbacks, and (b) make a recommendation, explaining your reasoning.',marks:8,
-   rubric:'Band 3 (7-8): Specific accurate benefits (e.g. access to online resources, Google Docs collaboration, lighter schoolbag, interactive learning) AND drawbacks (distraction, cyberbullying risk, digital footprint, device management, storage limits, cost, screen time health concerns, need for internet). Clear structured recommendation with reasoning. Unit-specific vocabulary rewarded. Band 2 (4-6): Some valid points both sides, recommendation present. Band 1 (1-3): One-sided or vague. Max 8 marks.'},
+   rubric:'Band 3 (7-8): Specific accurate benefits (e.g. access to online resources, Google Docs collaboration, lighter schoolbag, interactive learning) AND drawbacks (distraction, cyberbullying risk, digital footprint, device management, storage limits, cost, screen time health concerns, need for internet). Clear structured recommendation with reasoning. Unit-specific vocabulary rewarded. Band 2 (4-6): Some valid points both sides, recommendation present. Band 1 (1-3): One-sided or vague. Max 8 marks.',
+   suggestedAnswer: 'Suggested Answer Outline: Identify benefits like access to online resources and lighter schoolbags. Identify drawbacks like distraction, cyberbullying risks, and screen time health concerns. Provide a clear recommendation supporting either adoption or rejection based on these points.',
+   exampleAnswer: 'A major benefit of a school replacing textbooks with tablets is that students have instant access to online research and interactive learning. Another benefit is a much lighter schoolbag. However, a drawback is that tablets can be a massive distraction if students play games. There is also a higher risk of cyberbullying. I recommend providing tablets because the educational benefits heavily outweigh the risks, provided that the school implements strict device management and screen time rules.'},
   {id:'la2',type:'long',unit:'Units 1–4',text:'Imagine you are advising a younger student on how to stay safe and responsible online. Write a guide covering at least THREE of the following topics: (i) protecting your digital footprint, (ii) avoiding plagiarism when doing research, (iii) staying safe on computer networks, (iv) using digital devices and storage responsibly. Include practical tips for each topic you choose.',marks:8,
-   rubric:'Band 3 (7-8): Covers 3+ topics with specific, practical, accurate advice. Well-organised as a guide. Appropriate tone for a younger student. Band 2 (4-6): Covers 2-3 topics, mostly correct, less specific. Band 1 (1-3): Only 1 topic or very vague. Max 8 marks.'},
+   rubric:'Band 3 (7-8): Covers 3+ topics with specific, practical, accurate advice. Well-organised as a guide. Appropriate tone for a younger student. Band 2 (4-6): Covers 2-3 topics, mostly correct, less specific. Band 1 (1-3): Only 1 topic or very vague. Max 8 marks.',
+   suggestedAnswer: 'Suggested Answer Outline: Should cover at least 3 topics clearly. E.g., (1) Protect digital footprint by thinking before posting. (2) Avoid plagiarism by using citations and your own words. (3) Stay safe on networks by avoiding public Wi-Fi for sensitive tasks and looking for HTTPS.',
+   exampleAnswer: 'Here is a quick guide to staying safe online! First, protect your digital footprint by always thinking before you post, because everything you share stays online forever and can affect your future. Second, avoid plagiarism when doing research by putting information in your own words and always citing your sources to give credit. Third, stay safe on computer networks by avoiding public Wi-Fi for sensitive tasks and always looking for the padlock icon (HTTPS) on websites.'},
   {id:'la3',type:'long',unit:'Unit 1',text:'Compare application software and system software. In your answer: (a) define each type with an example, (b) explain the role of the operating system as a type of system software, and (c) explain what would happen if a computer had no system software.',marks:8,
-   rubric:'(a) 2 marks: Application software = programs users run for tasks (e.g. Word, Chrome, games); System software = manages hardware/runs the computer (e.g. Windows, macOS). (b) 2 marks: OS manages hardware and software, provides interface, allocates RAM, manages input/output devices. (c) 2 marks: without system software, hardware cannot function, user cannot interact with the device, applications cannot run. 2 marks: quality of explanation, examples, and use of terminology. Max 8.'},
+   rubric:'(a) 2 marks: Application software = programs users run for tasks (e.g. Word, Chrome, games); System software = manages hardware/runs the computer (e.g. Windows, macOS). (b) 2 marks: OS manages hardware and software, provides interface, allocates RAM, manages input/output devices. (c) 2 marks: without system software, hardware cannot function, user cannot interact with the device, applications cannot run. 2 marks: quality of explanation, examples, and use of terminology. Max 8.',
+   suggestedAnswer: 'Suggested Answer Outline: (a) Application software performs user tasks (e.g., Word, Chrome). System software runs the computer (e.g., Windows, macOS). (b) The OS manages hardware, allocates RAM, and provides the interface. (c) Without system software, hardware cannot function and applications cannot run.',
+   exampleAnswer: 'Application software helps users do specific tasks, like playing a game or typing in Microsoft Word. System software, on the other hand, runs the computer itself, like the Windows operating system. The operating system acts as a core manager that controls the hardware, allocates memory (RAM), and provides the interface allowing apps to run. If a computer had absolutely no system software, it wouldn\'t even boot up, the hardware could not function, and you wouldn\'t be able to use any applications.'},
   {id:'la4',type:'long',unit:'Unit 2',text:'Your school has a policy that all student projects must be original and properly referenced. Explain: (a) what plagiarism is and why it is considered wrong, (b) the consequences of plagiarism at school and in professional life, and (c) at least THREE steps students can take to avoid plagiarising when doing research online.',marks:8,
-   rubric:'(a) 2 marks: using others\' work without credit, presenting it as your own; wrong because it is dishonest and unfair to original creators. (b) 2 marks: school — lower grade, redo work, suspension/expelled; professional — loss of job, legal action, damaged reputation. (c) 3 marks (1 each): cite sources, paraphrase in own words, use quotation marks for direct quotes, check using plagiarism tools, keep notes of sources while researching. 1 mark: overall coherence. Max 8.'},
+   rubric:'(a) 2 marks: using others\' work without credit, presenting it as your own; wrong because it is dishonest and unfair to original creators. (b) 2 marks: school — lower grade, redo work, suspension/expelled; professional — loss of job, legal action, damaged reputation. (c) 3 marks (1 each): cite sources, paraphrase in own words, use quotation marks for direct quotes, check using plagiarism tools, keep notes of sources while researching. 1 mark: overall coherence. Max 8.',
+   suggestedAnswer: 'Suggested Answer Outline: (a) Plagiarism is using others\' work without credit; it\'s dishonest. (b) Consequences: failing grades or suspension at school; job loss or damaged reputation professionally. (c) Steps to avoid: cite sources, paraphrase, and use quotation marks for direct quotes.',
+   exampleAnswer: 'Plagiarism is copying someone else\'s work and pretending it is yours. It is considered wrong because it is a form of stealing and is completely unfair to the original creator. At school, the consequences of plagiarism could be failing the assignment or being suspended. In your professional life, you could be fired or even sued. To avoid this, students should always use their own words, put quotation marks around any direct quotes, and always include a proper citation.'},
   {id:'la5',type:'long',unit:'Unit 3',text:'Explain how data is kept secure when transmitted over the Internet. In your answer discuss: (a) what encryption is and how it works, (b) the difference between HTTP and HTTPS, and (c) TWO other steps users can take to protect their data when using the Internet.',marks:8,
-   rubric:'(a) 2 marks: encryption scrambles data using a key so only authorised users can read it; decryption key required to decode. (b) 2 marks: HTTP is unsecured, data sent in plain text; HTTPS encrypts data using SSL/TLS, indicated by padlock icon, used for secure websites. (c) 2 marks (1 each): use strong passwords, enable 2FA, avoid public Wi-Fi for sensitive tasks, keep software updated, check for padlock before entering passwords. 2 marks: quality and detail of explanation. Max 8.'},
+   rubric:'(a) 2 marks: encryption scrambles data using a key so only authorised users can read it; decryption key required to decode. (b) 2 marks: HTTP is unsecured, data sent in plain text; HTTPS encrypts data using SSL/TLS, indicated by padlock icon, used for secure websites. (c) 2 marks (1 each): use strong passwords, enable 2FA, avoid public Wi-Fi for sensitive tasks, keep software updated, check for padlock before entering passwords. 2 marks: quality and detail of explanation. Max 8.',
+   suggestedAnswer: 'Suggested Answer Outline: (a) Encryption scrambles data using a key so only authorized users can read it. (b) HTTP is unsecured plain text; HTTPS encrypts data using SSL/TLS, shown by a padlock icon. (c) Other steps: use strong passwords, enable 2FA, avoid public Wi-Fi for banking.',
+   exampleAnswer: 'Encryption is a security method that scrambles data into an unreadable code using a key. Only the specific person with the correct decryption key can unscramble and read it. HTTP sends data across the internet in plain text which is easy for hackers to steal, but HTTPS encrypts the data and shows a padlock icon to prove it is secure. To protect data further, users should use strong passwords and enable two-factor authentication (2FA).'},
   {id:'la6',type:'long',unit:'Unit 3',text:'A new student joins your school and asks you to explain computer networks. Write a clear explanation covering: (a) what a computer network is and why schools use them, (b) the difference between Bluetooth, Wi-Fi and cellular networks, and (c) ONE risk of using wireless networks and how to reduce that risk.',marks:8,
-   rubric:'(a) 2 marks: a network connects devices so they can share files, printers, and the internet; schools use them so students can share resources, access shared drives, collaborate. (b) 3 marks: Bluetooth short range up to 10m low speed; Wi-Fi local area 30-100m up to 1Gbps; Cellular wide area via cell towers, 5G up to 10Gbps. (c) 2 marks: risk e.g. unauthorised access/hacking; mitigation e.g. use strong passwords, encryption, HTTPS sites. 1 mark: clarity and structure. Max 8.'},
+   rubric:'(a) 2 marks: a network connects devices so they can share files, printers, and the internet; schools use them so students can share resources, access shared drives, collaborate. (b) 3 marks: Bluetooth short range up to 10m low speed; Wi-Fi local area 30-100m up to 1Gbps; Cellular wide area via cell towers, 5G up to 10Gbps. (c) 2 marks: risk e.g. unauthorised access/hacking; mitigation e.g. use strong passwords, encryption, HTTPS sites. 1 mark: clarity and structure. Max 8.',
+   suggestedAnswer: 'Suggested Answer Outline: (a) A network connects devices to share files/internet; useful for school collaboration. (b) Bluetooth is short-range (10m) and low speed; Wi-Fi is local (100m) and faster; Cellular covers wide areas via cell towers (up to 10Gbps for 5G). (c) Risk: Hacking on public networks. Solution: Use HTTPS and strong passwords.',
+   exampleAnswer: 'A computer network links devices together so they can share files and the internet. Schools use them so students can easily access shared folders and print to the same printer. Bluetooth is for short distances (10m) and is quite slow. Wi-Fi covers a whole building (100m) and is much faster. Cellular networks cover whole cities using massive cell towers. One huge risk of wireless networks is hackers intercepting your data. This can be reduced by using encryption and strong passwords.'},
   {id:'la7',type:'long',unit:'Unit 4',text:'Social media is widely used by teenagers. Discuss: (a) TWO benefits and TWO risks of using social media, (b) how using social media contributes to your digital footprint, and (c) at least TWO ways to manage your social media use responsibly.',marks:8,
-   rubric:'(a) 2 marks for benefits (staying connected, sharing information, creative expression, networking) and 2 marks for risks (cyberbullying, privacy exposure, addiction, misinformation, negative mental health). (b) 2 marks: every post, like, comment creates part of your digital footprint; even deleted content may persist as screenshots or backups; affects future reputation. (c) 2 marks: set privacy settings, think before posting, limit screen time, avoid sharing personal info, report cyberbullying. Max 8.'},
+   rubric:'(a) 2 marks for benefits (staying connected, sharing information, creative expression, networking) and 2 marks for risks (cyberbullying, privacy exposure, addiction, misinformation, negative mental health). (b) 2 marks: every post, like, comment creates part of your digital footprint; even deleted content may persist as screenshots or backups; affects future reputation. (c) 2 marks: set privacy settings, think before posting, limit screen time, avoid sharing personal info, report cyberbullying. Max 8.',
+   suggestedAnswer: 'Suggested Answer Outline: (a) Benefits: staying connected, sharing info. Risks: cyberbullying, privacy exposure. (b) Every post/comment adds to a footprint that affects future reputation, even if deleted. (c) Manage by setting privacy controls, thinking before posting, and limiting screen time.',
+   exampleAnswer: 'Social media has great benefits like keeping in touch with friends and learning new things. However, it has serious risks like cyberbullying and spending too much time staring at screens. Everything you post, comment, or like adds to your permanent digital footprint, which could negatively affect your future job if you post something inappropriate. To use it responsibly, you should set your account to private and think very carefully before you post anything.'},
   {id:'la8',type:'long',unit:'Unit 4',text:'Imagine you are the IT manager of a school. Write a digital wellness policy for students covering: (a) healthy screen time habits, (b) responsible online communication (digital etiquette), and (c) safe management of personal data and digital devices. Give specific rules for each section.',marks:8,
-   rubric:'Band 3 (7-8): Three clearly defined sections with specific, realistic rules for each. (a) Screen time: specific breaks, no devices before sleep, etc. (b) Etiquette: respectful language, no cyberbullying, professional emails. (c) Data/devices: strong passwords, do not share login details, regular backups, update software, manage storage. Tone is appropriate for a policy. Band 2 (4-6): Covers all 3 areas but rules are vague. Band 1 (1-3): Missing sections or very superficial. Max 8.'},
+   rubric:'Band 3 (7-8): Three clearly defined sections with specific, realistic rules for each. (a) Screen time: specific breaks, no devices before sleep, etc. (b) Etiquette: respectful language, no cyberbullying, professional emails. (c) Data/devices: strong passwords, do not share login details, regular backups, update software, manage storage. Tone is appropriate for a policy. Band 2 (4-6): Covers all 3 areas but rules are vague. Band 1 (1-3): Missing sections or very superficial. Max 8.',
+   suggestedAnswer: 'Suggested Answer Outline: Policy should include: (1) Screen time rules like taking breaks and no devices before sleep. (2) Etiquette rules like using respectful language and no cyberbullying. (3) Safety rules like using strong passwords, not sharing logins, and doing regular backups.',
+   exampleAnswer: 'School Digital Wellness Policy: \n1. Healthy Screen Time: Students must follow the 20-20-20 rule to rest their eyes and must turn off all digital devices 30 minutes before bed. \n2. Digital Etiquette: Students must use polite language online at all times; any form of cyberbullying will result in immediate suspension. \n3. Personal Data: Students must use strong passwords, perform weekly backups to the cloud, and never share their login details with friends.'},
   {id:'la9',type:'long',unit:'Units 1–2',text:'A student wants to create a well-researched, original report on climate change using digital tools. Describe how the student should: (a) search effectively for reliable information online (Unit 2), (b) store and organise their research files (Unit 2), (c) use utility programs to manage their computer while working on the project (Unit 1), and (d) ensure their report is free from plagiarism.',marks:8,
-   rubric:'(a) 2 marks: use quotation marks for exact phrases, use reliable sources (government/educational sites), evaluate credibility of sources. (b) 2 marks: organise files in named folders, use cloud storage for backup and collaboration, name files clearly. (c) 2 marks: use disk clean-up to free space, compress files if needed, use antivirus to stay safe, backup software. (d) 2 marks: paraphrase in own words, cite all sources, use quotation marks for direct quotes. Max 8.'},
+   rubric:'(a) 2 marks: use quotation marks for exact phrases, use reliable sources (government/educational sites), evaluate credibility of sources. (b) 2 marks: organise files in named folders, use cloud storage for backup and collaboration, name files clearly. (c) 2 marks: use disk clean-up to free space, compress files if needed, use antivirus to stay safe, backup software. (d) 2 marks: paraphrase in own words, cite all sources, use quotation marks for direct quotes. Max 8.',
+   suggestedAnswer: 'Suggested Answer Outline: (a) Search effectively by using quotation marks and reliable sources. (b) Store files in organized, named folders and use cloud backup. (c) Use disk clean-up to free space and antivirus to stay safe. (d) Avoid plagiarism by paraphrasing and citing all sources.',
+   exampleAnswer: 'To write the report, the student should search effectively by using quotation marks for exact phrases and checking if the websites are reliable. They should store their files on cloud storage like Google Drive so they don\'t lose them, putting them in clearly named folders. They should use a Disk Clean-Up utility to free up space so their computer runs smoothly, and an Antivirus program to stay safe. Finally, to avoid plagiarism, they must paraphrase the information into their own words and provide proper citations for all sources.'},
   {id:'la10',type:'long',unit:'Units 3–4',text:'The Internet has transformed the way people communicate and access information. Evaluate BOTH the benefits AND the challenges this has created for young people today. In your answer, refer to at least TWO topics from Unit 3 (Computer Networks) and TWO topics from Unit 4 (Managing Your Digital Life).',marks:8,
-   rubric:'Band 3 (7-8): Balanced evaluation with specific accurate references to Unit 3 content (e.g. wireless networks, encryption, secure websites) and Unit 4 content (e.g. digital footprint, online media, digital etiquette, screen time). Benefits and challenges both well-developed. Strong conclusion. Unit vocabulary used accurately. Band 2 (4-6): References to both units but less specific; some evaluation present. Band 1 (1-3): Very general, minimal unit content referenced. Max 8.'}
+   rubric:'Band 3 (7-8): Balanced evaluation with specific accurate references to Unit 3 content (e.g. wireless networks, encryption, secure websites) and Unit 4 content (e.g. digital footprint, online media, digital etiquette, screen time). Benefits and challenges both well-developed. Strong conclusion. Unit vocabulary used accurately. Band 2 (4-6): References to both units but less specific; some evaluation present. Band 1 (1-3): Very general, minimal unit content referenced. Max 8.',
+   suggestedAnswer: 'Suggested Answer Outline: Evaluate benefits like instant communication, collaboration, and learning (Unit 4), enabled by fast wireless networks and secure encryption (Unit 3). Evaluate challenges like digital footprint risks, cyberbullying, screen time addiction (Unit 4), and network hacking risks on public Wi-Fi (Unit 3).',
+   exampleAnswer: 'The internet has brought huge benefits for young people, such as the ability to easily collaborate on Google Docs and stream educational videos on online media platforms (Unit 4). This seamless communication is made possible because of incredibly fast Wi-Fi and secure HTTPS encryption (Unit 3). However, there are significant challenges, like the risk of cyberbullying and leaving a permanent negative digital footprint (Unit 4). Additionally, connecting to insecure public Wi-Fi networks poses hacking risks, where data can be stolen if it is not encrypted (Unit 3).'}
 ]
 
 let studentName = '', answers = {}, timerInterval = null, secondsLeft = TIMER_SECONDS;
@@ -376,9 +434,6 @@ function startTest(){
     err.textContent = 'Please enter the Google API key (ask your teacher).';
     err.style.display = 'block'; return;
   }
-  // Save Apps Script URL if provided
-  const scriptUrl = document.getElementById('scriptUrlInput').value.trim();
-  if(scriptUrl) localStorage.setItem('dlc_script_url', scriptUrl);
 
   // Pre-fill if already saved
   document.getElementById('apiKeySection').style.display = 'none';
@@ -548,7 +603,7 @@ async function markAll(){
     mcqTotal+=q.marks;
     const correct=answers[q.id]===q.answer;
     if(correct) mcqScore+=q.marks;
-    mcqDetails.push({id:q.id,q:q.text,chosen:q.options[answers[q.id]]||'No answer',correct:q.options[q.answer],isCorrect:correct,score:correct?q.marks:0,max:q.marks});
+    mcqDetails.push({id:q.id,q:q.text,chosen:q.options[answers[q.id]]||'No answer',correct:q.options[q.answer],isCorrect:correct,score:correct?q.marks:0,max:q.marks,explanation:q.explanation});
   });
 
   // AI-mark open questions
@@ -637,7 +692,11 @@ function showResults(r){
   r.mcqDetails.forEach((m,i)=>{
     const el=document.createElement('div');
     el.className='q-result '+(m.isCorrect?'correct':'wrong');
-    el.innerHTML='<strong>MCQ '+(i+1)+':</strong> '+(m.isCorrect?'Correct ✓':'Incorrect ✗ — Correct answer: '+m.correct)+' ('+m.score+'/'+m.max+')';
+    el.innerHTML='<div style="margin-bottom: 8px; line-height: 1.5;"><strong>MCQ '+(i+1)+':</strong> '+m.q+'</div>' +
+                 '<div style="font-weight: 500;">'+(m.isCorrect?'Correct ✓':'Incorrect ✗ — Correct answer: '+m.correct)+' ('+m.score+'/'+m.max+')</div>';
+    if(m.explanation) {
+        el.innerHTML += '<div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 14px; color: var(--gray); line-height: 1.5;"><strong>Explanation:</strong> ' + m.explanation + '</div>';
+    }
     df.appendChild(el);
   });
 
@@ -647,20 +706,30 @@ function showResults(r){
     const cls=pct2>=0.75?'correct':pct2>=0.4?'partial':'wrong';
     const el=document.createElement('div');
     el.className='q-result '+cls;
-    el.innerHTML='<strong>'+(q.type==='long'?'Long answer':'Short answer')+' ('+q.unit+'):</strong> '+fb.score+'/'+fb.max+' — '+fb.feedback;
+    el.innerHTML='<div style="margin-bottom: 8px; line-height: 1.5;"><strong>'+(q.type==='long'?'Long answer':'Short answer')+' ('+q.unit+'):</strong> '+q.text+'</div>' +
+                 '<div style="font-weight: 500;">Score: '+fb.score+'/'+fb.max+' — '+fb.feedback+'</div>';
+                 
+    if(q.suggestedAnswer) {
+        el.innerHTML += '<div class="suggested-answer"><strong>Suggested Answer Outline:</strong> ' + q.suggestedAnswer + '</div>';
+    }
+    
+    if(q.exampleAnswer) {
+        el.innerHTML += '<div class="example-answer"><strong>Example Student Answer:</strong> ' + q.exampleAnswer + '</div>';
+    }
+    
+    if(q.rubric) {
+        el.innerHTML += '<div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid rgba(0,0,0,0.1); font-size: 14px; color: var(--gray); line-height: 1.5;"><strong>Teacher\'s Rubric:</strong> ' + q.rubric + '</div>';
+    }
     df.appendChild(el);
   });
 }
 
 async function logToSheet(r){
   const msg=document.getElementById('sheetMsg');
-  msg.textContent='Saving score to teacher\'s record...';
+  msg.textContent='✓ Score recorded locally.';
   const pct=Math.round(r.total/r.possible*100);
   const ts=new Date().toLocaleString('en-SG');
 
-  // We'll use a Google Apps Script Web App endpoint if available, or log via fetch
-  // Since this is GitHub-hosted, teacher should set up an Apps Script Web App
-  // For now, log to console and show teacher the data
   const row={
     timestamp:ts,
     name:r.student,
@@ -672,23 +741,7 @@ async function logToSheet(r){
     percentage:pct+'%',
     feedback:r.overallFeedback
   };
-  console.log('SCORE ROW:',JSON.stringify(row));
-
-  const APPS_SCRIPT_URL = localStorage.getItem('dlc_script_url') || '';
-  if(APPS_SCRIPT_URL){
-    try{
-      const params = new URLSearchParams({ data: JSON.stringify(Object.values(row)) });
-      // no-cors: we can't read the response but the write still happens
-      await fetch(APPS_SCRIPT_URL + '?' + params.toString(), {method:'GET', mode:'no-cors'});
-      msg.textContent = '✓ Score saved to Google Sheets. The teacher can now see your result.';
-    } catch(e) {
-      msg.textContent = 'Score recorded locally. Sheet sync failed — please inform your teacher.';
-      console.error('Sheet sync error:', e);
-    }
-  } else {
-    msg.textContent = '⚠ Apps Script URL not set. Please ask your teacher to configure it.';
-    console.log('SCORE ROW (copy to sheet manually):', JSON.stringify(Object.values(row)));
-  }
+  console.log('SCORE ROW (Teacher Data):',JSON.stringify(row));
 }
 
 function showScreen(id){
