@@ -91,11 +91,10 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
 .score-card .num{font-size:22px;font-weight:700;color:var(--gray)}
 .score-card .lbl{font-size:11px;text-transform:uppercase;letter-spacing:0.05em;color:var(--gray-mid);margin-top:3px}
 .feedback-panel{background:var(--blue-light);border-radius:var(--radius);padding:1.25rem;margin:1rem 0;font-size:14px;line-height:1.7;color:var(--blue-dark)}
-.q-result{margin-bottom:12px;padding:12px 16px;border-radius:var(--radius-sm);font-size:13.5px;line-height:1.6;border: 1px solid var(--border);}
-.q-result hr { border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin: 10px 0; }
-.q-result.correct{background:var(--green-light);border-color:var(--green);border-left:4px solid var(--green);}
-.q-result.partial{background:var(--amber-light);border-color:var(--amber);border-left:4px solid var(--amber);}
-.q-result.wrong{background:var(--red-light);border-color:var(--red);border-left:4px solid var(--red);}
+.q-result{margin-bottom:8px;padding:10px 14px;border-radius:var(--radius-sm);font-size:13px;line-height:1.55}
+.q-result.correct{background:var(--green-light);color:var(--green);border-left:3px solid #639922}
+.q-result.partial{background:var(--amber-light);color:var(--amber);border-left:3px solid #BA7517}
+.q-result.wrong{background:var(--red-light);color:var(--red);border-left:3px solid #E24B4A}
 
 /* Status */
 .status-msg{text-align:center;font-size:13px;color:var(--gray-mid);padding:1rem}
@@ -121,6 +120,7 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
 <body>
 <div id="app">
 
+  <!-- Welcome Screen -->
   <div id="screen-welcome" class="screen active">
     <div class="welcome-card">
       <h1>Digital Literacy &amp; Computing</h1>
@@ -150,6 +150,7 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
     </div>
   </div>
 
+  <!-- Test Screen -->
   <div id="screen-test" class="screen">
     <div class="test-header">
       <div>
@@ -181,6 +182,7 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
     <div id="errorMsg" style="display:none;padding:1rem;border-radius:var(--radius-sm);background:#FCEBEB;border:1px solid #f09595;font-size:14px;color:#A32D2D;margin-bottom:1rem;white-space:pre-wrap"></div>
   </div>
 
+  <!-- Results Screen -->
   <div id="screen-results" class="screen">
     <div class="result-header">
       <div style="font-size:14px;color:var(--gray-mid);margin-bottom:0.5rem" id="resultMeta"></div>
@@ -194,12 +196,7 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
       <div class="score-card"><div class="num" id="laResult">—</div><div class="lbl">Section C · Long answer</div></div>
     </div>
     <div class="feedback-panel" id="overallFeedback"></div>
-    
-    <div style="margin: 2rem 0 1rem; border-bottom: 2px solid var(--border); padding-bottom: 0.5rem;">
-      <h2 style="font-size: 18px; color: var(--blue);">Detailed Review & Explanations</h2>
-    </div>
     <div id="detailedFeedback"></div>
-    
     <p class="status-msg" id="sheetMsg"></p>
     <div style="text-align:center;margin-top:1.5rem">
       <button class="btn btn-outline" onclick="location.reload()">New attempt</button>
@@ -207,6 +204,7 @@ input[type=text]:focus{outline:none;border-color:var(--blue);background:#fff}
   </div>
 </div>
 
+<!-- Teacher modal -->
 <button class="teacher-btn" onclick="openTeacher()">⚙ Teacher</button>
 <div class="modal-overlay hidden" id="teacherModal">
   <div class="modal">
@@ -264,4 +262,454 @@ let questions = [
   {id:'u2m8',type:'mcq',unit:'Unit 2',text:'In Google Docs, what does the autosave feature do?',options:['Sends the document to your teacher automatically','Saves your work automatically as you type','Creates a backup copy on a USB drive','Locks the document so no one else can edit'],answer:1,marks:1},
 
   // ── UNIT 3: Computer Networks (7 MCQ) ────────────────────────────────
-  {id:'u3m1',type:'mcq',unit:'Unit 3',text:'An IP address uniquely identifies a device on a network. What does DNS do?',options:['Encrypts data before it is sent','Translates URLs into IP addresses','Connects devices to a
+  {id:'u3m1',type:'mcq',unit:'Unit 3',text:'An IP address uniquely identifies a device on a network. What does DNS do?',options:['Encrypts data before it is sent','Translates URLs into IP addresses','Connects devices to a printer','Controls how fast data travels'],answer:1,marks:1},
+  {id:'u3m2',type:'mcq',unit:'Unit 3',text:'Which wireless network has the SHORTEST range of about 10 metres?',options:['Wi-Fi','Cellular network','Bluetooth','5G'],answer:2,marks:1},
+  {id:'u3m3',type:'mcq',unit:'Unit 3',text:'What is encryption?',options:['Making files smaller to save storage','Converting data into a code so only authorised users can read it','Deleting temporary files from a device','Connecting two devices wirelessly'],answer:1,marks:1},
+  {id:'u3m4',type:'mcq',unit:'Unit 3',text:'How can you tell that a website is using a secure connection?',options:['The website loads very quickly','The URL begins with HTTPS and there is a padlock icon','The website has a colourful design','The website has no advertisements'],answer:1,marks:1},
+  {id:'u3m5',type:'mcq',unit:'Unit 3',text:'WhatsApp uses end-to-end encryption. What does this mean?',options:['Only WhatsApp employees can read your messages','Messages are deleted after 24 hours automatically','Only the sender and intended recipient can read the messages','Messages are stored on a public server'],answer:2,marks:1},
+  {id:'u3m6',type:'mcq',unit:'Unit 3',text:'Which generation of cellular network can reach data transfer speeds of up to 10 Gbps?',options:['3G','4G','5G','2G'],answer:2,marks:1},
+  {id:'u3m7',type:'mcq',unit:'Unit 3',text:'You are at an airport using public Wi-Fi to do online banking. Why is this risky?',options:['Public Wi-Fi is always very slow','Public Wi-Fi networks may not be secure and others could intercept your data','Banks do not allow online access via Wi-Fi','Airport Wi-Fi blocks banking websites'],answer:1,marks:1},
+
+  // ── UNIT 4: Managing Your Digital Life (7 MCQ) ───────────────────────
+  {id:'u4m1',type:'mcq',unit:'Unit 4',text:'What is a digital footprint?',options:['A type of computer virus','The trail of data and information you leave behind when using the Internet','A method of compressing digital files','A security feature that tracks hackers'],answer:1,marks:1},
+  {id:'u4m2',type:'mcq',unit:'Unit 4',text:'A website records your browsing history without you doing anything. This is an example of which type of digital footprint?',options:['Active digital footprint','Passive digital footprint','Encrypted digital footprint','Deleted digital footprint'],answer:1,marks:1},
+  {id:'u4m3',type:'mcq',unit:'Unit 4',text:'What does "digital etiquette" mean?',options:['The speed at which you type online messages','Rules for setting up a home Wi-Fi network','Polite and respectful behaviour when communicating online','Using only secure websites'],answer:2,marks:1},
+  {id:'u4m4',type:'mcq',unit:'Unit 4',text:'Which of the following is an example of online media?',options:['A printed newspaper','A library book','A live news stream on a website','A CD-ROM encyclopedia'],answer:2,marks:1},
+  {id:'u4m5',type:'mcq',unit:'Unit 4',text:'Which of the following is a healthy screen time habit?',options:['Using devices for 3 hours without any break','Keeping notifications on at all times','Turning off all devices at least 30 minutes before bedtime','Sleeping with your phone beside your pillow'],answer:2,marks:1},
+  {id:'u4m6',type:'mcq',unit:'Unit 4',text:'Your device storage is nearly full. Which action BEST frees up space?',options:['Restarting the device','Installing a new operating system','Deleting unused apps and compressing large files','Turning off Wi-Fi'],answer:2,marks:1},
+  {id:'u4m7',type:'mcq',unit:'Unit 4',text:'Which of the following is a collaborative online tool that allows multiple users to work on the same document at the same time?',options:['Microsoft Paint','Google Docs','Windows Notepad','Adobe Acrobat Reader'],answer:1,marks:1},
+
+  // ── UNIT 1: Short Answer (6 questions) ───────────────────────────────
+  {id:'u1s1',type:'short',unit:'Unit 1',text:'State ONE difference between RAM and ROM.',marks:2,
+   rubric:'1 mark: RAM is temporary/volatile (loses data when power off) vs ROM is permanent/non-volatile. 1 mark: RAM stores currently running programs vs ROM stores start-up/boot instructions. Accept any one clear correct difference for 2 marks if well explained.'},
+  {id:'u1s2',type:'short',unit:'Unit 1',text:'Give TWO examples of utility programs and state what each one does.',marks:4,
+   rubric:'1 mark per utility program named (max 2), 1 mark per correct function described (max 2). Accept: Disk Clean-Up (removes temporary/unnecessary files), Antivirus (detects/removes malware and viruses), Backup Software (creates copies of files for recovery), Data Compression Tools (reduces file size). Max 4 marks.'},
+  {id:'u1s3',type:'short',unit:'Unit 1',text:'Explain why data compression is useful. Give ONE example of when you would use it.',marks:3,
+   rubric:'1 mark: reduces file size. 1 mark: saves storage space OR allows faster transfer/upload. 1 mark: valid example (sending email attachments, uploading photos to social media, sharing homework files, storing videos). Max 3 marks.'},
+  {id:'u1s4',type:'short',unit:'Unit 1',text:'State THREE tasks carried out by an operating system.',marks:3,
+   rubric:'1 mark each for any 3 correct tasks: provides user interface, manages input/output devices, manages memory/RAM, launches applications, runs multiple applications simultaneously, manages user accounts and security, manages files, detects and fixes errors. Max 3 marks.'},
+  {id:'u1s5',type:'short',unit:'Unit 1',text:'A student is choosing between a laptop with 8 GB of RAM and one with 16 GB of RAM, both at the same price. Explain which one you would recommend and why.',marks:3,
+   rubric:'1 mark: recommends 16 GB RAM. 1 mark: because more RAM allows more programs to run smoothly at the same time. 1 mark: without enough RAM, the device slows down or apps crash when many are open. Accept other valid reasoning. Max 3 marks.'},
+  {id:'u1s6',type:'short',unit:'Unit 1',text:'Describe what "evaluating a digital device" means and explain why it is important.',marks:2,
+   rubric:'1 mark: evaluating means assessing/reviewing the design, features, strengths and weaknesses of a device. 1 mark: it is important to understand how well it meets user needs, identify improvements, or decide if it is suitable for a purpose. Max 2 marks.'},
+
+  // ── UNIT 2: Short Answer (6 questions) ───────────────────────────────
+  {id:'u2s1',type:'short',unit:'Unit 2',text:'Explain what the Track Changes feature in Microsoft Word does. Why is it useful when working on a group document?',marks:3,
+   rubric:'1 mark: Track Changes records/shows all edits made to a document in a different colour. 1 mark: other users can see exactly what was changed and who changed it. 1 mark: users can choose to accept or reject each change, making collaboration easier and more transparent. Max 3 marks.'},
+  {id:'u2s2',type:'short',unit:'Unit 2',text:'State TWO advantages of saving school files on cloud storage instead of on a USB drive.',marks:2,
+   rubric:'1 mark each for any 2: accessible from any device with internet, no risk of physical loss, automatic saving, multiple users can collaborate in real time, files saved automatically, can recover older versions. Max 2 marks.'},
+  {id:'u2s3',type:'short',unit:'Unit 2',text:'Explain what plagiarism is and give TWO ways it can happen when doing research online.',marks:4,
+   rubric:'1 mark: using someone else\'s work/ideas without giving credit and presenting it as your own. 1 mark each for 2 valid ways: copying text word-for-word, paraphrasing without crediting, using an image without permission, copying idea/structure without attribution. Max 4 marks (1+1+1+1 or 2+1+1).'},
+  {id:'u2s4',type:'short',unit:'Unit 2',text:'A student finds an article online and wants to use information from it in their project. Describe TWO responsible steps the student should take.',marks:2,
+   rubric:'1 mark each for 2 valid steps: cite/reference the source, paraphrase in own words rather than copy directly, check if the source is reliable/credible, ask for permission if using images, use quotation marks if quoting directly. Max 2 marks.'},
+  {id:'u2s5',type:'short',unit:'Unit 2',text:'In Google Drive, what is the difference between sharing a file as "Editor" and sharing it as "Viewer"? Give ONE situation where you would use each.',marks:4,
+   rubric:'1 mark: Editor can make changes to the file. 1 mark: Viewer can only read/view, cannot edit. 1 mark: valid Editor example (group project where classmates need to add content). 1 mark: valid Viewer example (sharing a finished report with teacher to read). Max 4 marks.'},
+  {id:'u2s6',type:'short',unit:'Unit 2',text:'State what a copyright is. Give ONE example of an action that would break copyright law.',marks:2,
+   rubric:'1 mark: copyright is a legal right protecting a creator\'s original work — only the creator can copy, share or sell it. 1 mark: valid example such as downloading a song and selling it, copying an entire article without permission, using someone\'s photo without credit or payment. Max 2 marks.'},
+
+  // ── UNIT 3: Short Answer (6 questions) ───────────────────────────────
+  {id:'u3s1',type:'short',unit:'Unit 3',text:'Explain what an IP address is and what a URL is. How are the two related?',marks:3,
+   rubric:'1 mark: IP address is a unique set of numbers that identifies a device on a network. 1 mark: URL is a human-readable web address (e.g. www.google.com). 1 mark: DNS translates the URL into its corresponding IP address so the browser can find the right website. Max 3 marks.'},
+  {id:'u3s2',type:'short',unit:'Unit 3',text:'Compare Bluetooth and Wi-Fi by stating ONE similarity and TWO differences.',marks:3,
+   rubric:'1 mark: valid similarity (both are wireless, both use radio waves, both connect devices). 1 mark each for 2 differences: range (Bluetooth up to 10m vs Wi-Fi 30-100m), speed (Bluetooth up to 1Mbps vs Wi-Fi up to 1Gbps), security (Bluetooth lower security than Wi-Fi), devices supported (Bluetooth limited vs Wi-Fi many). Max 3 marks.'},
+  {id:'u3s3',type:'short',unit:'Unit 3',text:'Explain what encryption is. Give ONE real-life example of where encryption is used.',marks:3,
+   rubric:'1 mark: encryption converts data into a code/scrambled form so only authorised users with the correct key can read it. 1 mark: it protects data from being intercepted by hackers/unauthorised users. 1 mark: valid example — WhatsApp messages (end-to-end encryption), online banking/HTTPS websites, logging into school email. Max 3 marks.'},
+  {id:'u3s4',type:'short',unit:'Unit 3',text:'How can you check if a website is secure before entering personal information? State TWO ways.',marks:2,
+   rubric:'1 mark each for: check for HTTPS at the start of the URL, look for the padlock icon in the browser address bar, avoid entering passwords on public Wi-Fi, check the website is from a trusted organisation. Max 2 marks.'},
+  {id:'u3s5',type:'short',unit:'Unit 3',text:'State the main difference between a 4G and a 5G cellular network.',marks:2,
+   rubric:'1 mark: 5G is faster than 4G (5G can reach up to 10 Gbps, much faster than 4G). 1 mark: 5G supports more connected devices / has lower latency / is more suitable for smart devices and IoT. Max 2 marks.'},
+  {id:'u3s6',type:'short',unit:'Unit 3',text:'A student uses the school\'s public Wi-Fi to log into their online bank account. Explain TWO risks of doing this.',marks:4,
+   rubric:'1 mark each for identifying the risk, 1 mark each for explaining the consequence. Risks: (1) Public Wi-Fi may not be encrypted — hackers can intercept the login data / steal the password; (2) Others on the same network could monitor traffic / perform a man-in-the-middle attack. Accept other valid risks with explanation. Max 4 marks.'},
+
+  // ── UNIT 4: Short Answer (7 questions) ───────────────────────────────
+  {id:'u4s1',type:'short',unit:'Unit 4',text:'Explain what a digital footprint is. Give ONE example of an active and ONE example of a passive digital footprint.',marks:3,
+   rubric:'1 mark: digital footprint is the trail of information/data you leave behind when using the Internet. 1 mark: active example — posting on social media, sending an email, uploading a photo. 1 mark: passive example — a website recording your browsing history, cookies tracking your activity without you knowing. Max 3 marks.'},
+  {id:'u4s2',type:'short',unit:'Unit 4',text:'State TWO ways your digital footprint could affect your future opportunities such as scholarships or jobs.',marks:2,
+   rubric:'1 mark each for 2 valid impacts: embarrassing posts could put off employers, negative comments could harm reputation, inappropriate content could disqualify scholarship applications, positive digital footprint (portfolio, projects) could impress employers. Max 2 marks.'},
+  {id:'u4s3',type:'short',unit:'Unit 4',text:'What is digital etiquette? Give TWO examples of practising good digital etiquette online.',marks:3,
+   rubric:'1 mark: digital etiquette is being polite, respectful and responsible when communicating online. 1 mark each for 2 valid examples: using polite language in messages/emails, not sending hurtful comments, not sharing someone\'s private information without permission, responding professionally to messages, not spamming. Max 3 marks.'},
+  {id:'u4s4',type:'short',unit:'Unit 4',text:'Describe TWO differences between online media and offline media. Give ONE example of each.',marks:4,
+   rubric:'1 mark each for 2 valid differences: online media requires internet access vs offline does not; online media is updated in real time vs offline is static; online media allows interaction (comments/likes) vs offline does not; online media can be accessed anywhere vs offline is physical. 1 mark: online example (news website, YouTube, podcast). 1 mark: offline example (printed newspaper, physical book, DVD). Max 4 marks.'},
+  {id:'u4s5',type:'short',unit:'Unit 4',text:'Explain why it is important to organise and manage the storage on your digital device. What happens if you do not?',marks:3,
+   rubric:'1 mark: organising storage helps you find files easily and keeps the device running efficiently. 1 mark: if storage is full, you cannot save new files, install apps or take photos. 1 mark: the device may slow down, freeze or lose important files. Max 3 marks.'},
+  {id:'u4s6',type:'short',unit:'Unit 4',text:'State TWO healthy habits for managing your screen time.',marks:2,
+   rubric:'1 mark each for 2 valid habits: set a screen time limit, take regular breaks (e.g. every 30 minutes), turn off notifications while studying, avoid screens 30 minutes before bed, use screen-free mealtimes, engage in physical activity. Max 2 marks.'},
+  {id:'u4s7',type:'short',unit:'Unit 4',text:'Give TWO advantages of using Google Docs for a group project compared to emailing a Word document back and forth.',marks:2,
+   rubric:'1 mark each for 2 valid advantages: multiple users can edit the same document at the same time, changes are saved automatically, all edits are visible to everyone in real time, no need to send different versions, can access from any device with internet, can use comments and Track Changes collaboratively. Max 2 marks.'},
+
+  // ── LONG ANSWER (10 questions) ────────────────────────────────────────
+  {id:'la1',type:'long',unit:'Units 1–4',text:'A school is planning to give every Secondary 1 student a tablet to use in all lessons, replacing textbooks and exercise books. Using your knowledge from Units 1–4, discuss the benefits and drawbacks of this decision. In your answer: (a) identify at least TWO benefits and TWO drawbacks, and (b) make a recommendation, explaining your reasoning.',marks:8,
+   rubric:'Band 3 (7-8): Specific accurate benefits (e.g. access to online resources, Google Docs collaboration, lighter schoolbag, interactive learning) AND drawbacks (distraction, cyberbullying risk, digital footprint, device management, storage limits, cost, screen time health concerns, need for internet). Clear structured recommendation with reasoning. Unit-specific vocabulary rewarded. Band 2 (4-6): Some valid points both sides, recommendation present. Band 1 (1-3): One-sided or vague. Max 8 marks.'},
+  {id:'la2',type:'long',unit:'Units 1–4',text:'Imagine you are advising a younger student on how to stay safe and responsible online. Write a guide covering at least THREE of the following topics: (i) protecting your digital footprint, (ii) avoiding plagiarism when doing research, (iii) staying safe on computer networks, (iv) using digital devices and storage responsibly. Include practical tips for each topic you choose.',marks:8,
+   rubric:'Band 3 (7-8): Covers 3+ topics with specific, practical, accurate advice. Well-organised as a guide. Appropriate tone for a younger student. Band 2 (4-6): Covers 2-3 topics, mostly correct, less specific. Band 1 (1-3): Only 1 topic or very vague. Max 8 marks.'},
+  {id:'la3',type:'long',unit:'Unit 1',text:'Compare application software and system software. In your answer: (a) define each type with an example, (b) explain the role of the operating system as a type of system software, and (c) explain what would happen if a computer had no system software.',marks:8,
+   rubric:'(a) 2 marks: Application software = programs users run for tasks (e.g. Word, Chrome, games); System software = manages hardware/runs the computer (e.g. Windows, macOS). (b) 2 marks: OS manages hardware and software, provides interface, allocates RAM, manages input/output devices. (c) 2 marks: without system software, hardware cannot function, user cannot interact with the device, applications cannot run. 2 marks: quality of explanation, examples, and use of terminology. Max 8.'},
+  {id:'la4',type:'long',unit:'Unit 2',text:'Your school has a policy that all student projects must be original and properly referenced. Explain: (a) what plagiarism is and why it is considered wrong, (b) the consequences of plagiarism at school and in professional life, and (c) at least THREE steps students can take to avoid plagiarising when doing research online.',marks:8,
+   rubric:'(a) 2 marks: using others\' work without credit, presenting it as your own; wrong because it is dishonest and unfair to original creators. (b) 2 marks: school — lower grade, redo work, suspension/expelled; professional — loss of job, legal action, damaged reputation. (c) 3 marks (1 each): cite sources, paraphrase in own words, use quotation marks for direct quotes, check using plagiarism tools, keep notes of sources while researching. 1 mark: overall coherence. Max 8.'},
+  {id:'la5',type:'long',unit:'Unit 3',text:'Explain how data is kept secure when transmitted over the Internet. In your answer discuss: (a) what encryption is and how it works, (b) the difference between HTTP and HTTPS, and (c) TWO other steps users can take to protect their data when using the Internet.',marks:8,
+   rubric:'(a) 2 marks: encryption scrambles data using a key so only authorised users can read it; decryption key required to decode. (b) 2 marks: HTTP is unsecured, data sent in plain text; HTTPS encrypts data using SSL/TLS, indicated by padlock icon, used for secure websites. (c) 2 marks (1 each): use strong passwords, enable 2FA, avoid public Wi-Fi for sensitive tasks, keep software updated, check for padlock before entering passwords. 2 marks: quality and detail of explanation. Max 8.'},
+  {id:'la6',type:'long',unit:'Unit 3',text:'A new student joins your school and asks you to explain computer networks. Write a clear explanation covering: (a) what a computer network is and why schools use them, (b) the difference between Bluetooth, Wi-Fi and cellular networks, and (c) ONE risk of using wireless networks and how to reduce that risk.',marks:8,
+   rubric:'(a) 2 marks: a network connects devices so they can share files, printers, and the internet; schools use them so students can share resources, access shared drives, collaborate. (b) 3 marks: Bluetooth short range up to 10m low speed; Wi-Fi local area 30-100m up to 1Gbps; Cellular wide area via cell towers, 5G up to 10Gbps. (c) 2 marks: risk e.g. unauthorised access/hacking; mitigation e.g. use strong passwords, encryption, HTTPS sites. 1 mark: clarity and structure. Max 8.'},
+  {id:'la7',type:'long',unit:'Unit 4',text:'Social media is widely used by teenagers. Discuss: (a) TWO benefits and TWO risks of using social media, (b) how using social media contributes to your digital footprint, and (c) at least TWO ways to manage your social media use responsibly.',marks:8,
+   rubric:'(a) 2 marks for benefits (staying connected, sharing information, creative expression, networking) and 2 marks for risks (cyberbullying, privacy exposure, addiction, misinformation, negative mental health). (b) 2 marks: every post, like, comment creates part of your digital footprint; even deleted content may persist as screenshots or backups; affects future reputation. (c) 2 marks: set privacy settings, think before posting, limit screen time, avoid sharing personal info, report cyberbullying. Max 8.'},
+  {id:'la8',type:'long',unit:'Unit 4',text:'Imagine you are the IT manager of a school. Write a digital wellness policy for students covering: (a) healthy screen time habits, (b) responsible online communication (digital etiquette), and (c) safe management of personal data and digital devices. Give specific rules for each section.',marks:8,
+   rubric:'Band 3 (7-8): Three clearly defined sections with specific, realistic rules for each. (a) Screen time: specific breaks, no devices before sleep, etc. (b) Etiquette: respectful language, no cyberbullying, professional emails. (c) Data/devices: strong passwords, do not share login details, regular backups, update software, manage storage. Tone is appropriate for a policy. Band 2 (4-6): Covers all 3 areas but rules are vague. Band 1 (1-3): Missing sections or very superficial. Max 8.'},
+  {id:'la9',type:'long',unit:'Units 1–2',text:'A student wants to create a well-researched, original report on climate change using digital tools. Describe how the student should: (a) search effectively for reliable information online (Unit 2), (b) store and organise their research files (Unit 2), (c) use utility programs to manage their computer while working on the project (Unit 1), and (d) ensure their report is free from plagiarism.',marks:8,
+   rubric:'(a) 2 marks: use quotation marks for exact phrases, use reliable sources (government/educational sites), evaluate credibility of sources. (b) 2 marks: organise files in named folders, use cloud storage for backup and collaboration, name files clearly. (c) 2 marks: use disk clean-up to free space, compress files if needed, use antivirus to stay safe, backup software. (d) 2 marks: paraphrase in own words, cite all sources, use quotation marks for direct quotes. Max 8.'},
+  {id:'la10',type:'long',unit:'Units 3–4',text:'The Internet has transformed the way people communicate and access information. Evaluate BOTH the benefits AND the challenges this has created for young people today. In your answer, refer to at least TWO topics from Unit 3 (Computer Networks) and TWO topics from Unit 4 (Managing Your Digital Life).',marks:8,
+   rubric:'Band 3 (7-8): Balanced evaluation with specific accurate references to Unit 3 content (e.g. wireless networks, encryption, secure websites) and Unit 4 content (e.g. digital footprint, online media, digital etiquette, screen time). Benefits and challenges both well-developed. Strong conclusion. Unit vocabulary used accurately. Band 2 (4-6): References to both units but less specific; some evaluation present. Band 1 (1-3): Very general, minimal unit content referenced. Max 8.'}
+]
+
+let studentName = '', answers = {}, timerInterval = null, secondsLeft = TIMER_SECONDS;
+
+function startTest(){
+  // Handle API key
+  const keyInput = document.getElementById('apiKeyInput').value.trim();
+  if(keyInput) {
+    window._apiKey = keyInput;
+    localStorage.setItem('dlc_gapi_key', keyInput);
+  } else {
+    window._apiKey = localStorage.getItem('dlc_gapi_key') || '';
+  }
+  if(!window._apiKey){
+    const err = document.getElementById('nameError');
+    err.textContent = 'Please enter the Google API key (ask your teacher).';
+    err.style.display = 'block'; return;
+  }
+  // Save Apps Script URL if provided
+  const scriptUrl = document.getElementById('scriptUrlInput').value.trim();
+  if(scriptUrl) localStorage.setItem('dlc_script_url', scriptUrl);
+
+  // Pre-fill if already saved
+  document.getElementById('apiKeySection').style.display = 'none';
+
+  const n = document.getElementById('studentName').value.trim();
+  if(!n){
+    const err = document.getElementById('nameError');
+    err.textContent = 'Please enter your full name.';
+    err.style.display='block'; return;
+  }
+  studentName = n;
+  document.getElementById('nameError').style.display='none';
+  document.getElementById('headerName').textContent = n;
+  const total = questions.reduce((a,q)=>a+q.marks,0);
+  document.getElementById('marksInfo').textContent = total + ' marks';
+  renderQuestions();
+  startTimer();
+  showScreen('screen-test');
+}
+
+function startTimer(){
+  secondsLeft = TIMER_SECONDS;
+  updateTimerDisplay();
+  timerInterval = setInterval(()=>{
+    secondsLeft--;
+    updateTimerDisplay();
+    if(secondsLeft<=0){ clearInterval(timerInterval); autoSubmit(); }
+    if(secondsLeft<=600) document.getElementById('timerDisplay').classList.add('warning');
+  },1000);
+}
+
+function updateTimerDisplay(){
+  const h=Math.floor(secondsLeft/3600);
+  const m=Math.floor((secondsLeft%3600)/60);
+  const s=secondsLeft%60;
+  document.getElementById('timerDisplay').textContent =
+    (h?h+':':'')+(m<10&&h?'0':'')+m+':'+(s<10?'0':'')+s;
+}
+
+function autoSubmit(){
+  const status=document.getElementById('statusMsg');
+  status.style.display='block';
+  status.textContent='⏰ Time is up! Submitting your answers...';
+  document.getElementById('confirmBar').style.display='none';
+  document.getElementById('submitBtn').disabled=true;
+  submitTest();
+}
+
+function renderQuestions(){
+  const c=document.getElementById('questionsContainer');
+  c.innerHTML='';
+  const mcqs=questions.filter(q=>q.type==='mcq');
+  const sas=questions.filter(q=>q.type==='short');
+  const las=questions.filter(q=>q.type==='long');
+
+  function section(label,sub){
+    const d=document.createElement('div');
+    d.className='section-head';
+    d.innerHTML='<h2>'+label+'</h2><p>'+sub+'</p>';
+    c.appendChild(d);
+  }
+
+  const mcqMarks=mcqs.reduce((a,q)=>a+q.marks,0);
+  const saMarks=sas.reduce((a,q)=>a+q.marks,0);
+  const laMarks=las.reduce((a,q)=>a+q.marks,0);
+
+  section('Section A — Multiple Choice Questions ('+mcqs.length+' questions · '+mcqMarks+' marks)','Choose the best answer for each question. Each question is worth 1 mark.');
+  mcqs.forEach((q,i)=>c.appendChild(buildMCQ(q,i+1)));
+
+  section('Section B — Short Answer Questions ('+sas.length+' questions · '+saMarks+' marks)','Answer in complete sentences. Write only what is asked.');
+  sas.forEach((q,i)=>c.appendChild(buildTextQ(q,mcqs.length+i+1,'sa-area')));
+
+  section('Section C — Long Answer Questions ('+las.length+' questions · '+laMarks+' marks)','Write detailed, well-organised answers. Use subject vocabulary where possible.');
+  las.forEach((q,i)=>c.appendChild(buildTextQ(q,mcqs.length+sas.length+i+1,'la-area')));
+
+  updateProgress();
+}
+
+function buildMCQ(q,num){
+  const d=document.createElement('div');
+  d.className='card';
+  const letters=['A','B','C','D'];
+  d.innerHTML='<div class="q-num">Question '+num+' <span class="q-unit">'+q.unit+'</span><span class="marks-badge">'+q.marks+' mark'+(q.marks>1?'s':'')+'</span></div><div class="q-text">'+q.text+'</div><div class="mcq-options" id="opts_'+q.id+'"></div>';
+  const opts=d.querySelector('.mcq-options');
+  q.options.forEach((opt,i)=>{
+    const lbl=document.createElement('div');
+    lbl.className='mcq-opt';
+    lbl.innerHTML='<span class="opt-letter">'+letters[i]+'</span><span>'+opt+'</span>';
+    lbl.addEventListener('click',()=>{
+      answers[q.id]=i;
+      d.querySelectorAll('.mcq-opt').forEach(l=>l.classList.remove('selected'));
+      lbl.classList.add('selected');
+      updateProgress();
+    });
+    opts.appendChild(lbl);
+  });
+  return d;
+}
+
+function buildTextQ(q,num,cls){
+  const d=document.createElement('div');
+  d.className='card';
+  d.innerHTML='<div class="q-num">Question '+num+' <span class="q-unit">'+q.unit+'</span><span class="marks-badge">'+q.marks+' marks</span></div><div class="q-text">'+q.text+'</div><textarea id="ans_'+q.id+'" class="'+cls+'" placeholder="Write your answer here..."></textarea><div class="char-hint" id="hint_'+q.id+'">0 characters</div>';
+  const ta=d.querySelector('textarea');
+  ta.addEventListener('input',()=>{
+    answers[q.id]=ta.value;
+    document.getElementById('hint_'+q.id).textContent=ta.value.length+' characters';
+    updateProgress();
+  });
+  return d;
+}
+
+function updateProgress(){
+  const answered=questions.filter(q=>answers[q.id]!==undefined&&answers[q.id]!=='').length;
+  const pct=Math.round(answered/questions.length*100);
+  document.getElementById('progressFill').style.width=pct+'%';
+  document.getElementById('progressLabel').textContent=answered+' of '+questions.length+' answered';
+}
+
+function confirmSubmit(){
+  const unanswered=questions.filter(q=>answers[q.id]===undefined||answers[q.id]==='').length;
+  const bar=document.getElementById('confirmBar');
+  const msg=document.getElementById('confirmMsg');
+  if(unanswered>0){
+    msg.textContent='You have '+unanswered+' unanswered question(s). Submit anyway?';
+  } else {
+    msg.textContent='Ready to submit? You cannot change answers after this.';
+  }
+  bar.style.display='flex';
+  bar.scrollIntoView({behavior:'smooth'});
+}
+function cancelSubmit(){
+  document.getElementById('confirmBar').style.display='none';
+}
+
+async function submitTest(){
+  clearInterval(timerInterval);
+  document.getElementById('confirmBar').style.display='none';
+  const btn=document.getElementById('submitBtn');
+  btn.disabled=true; btn.textContent='Marking...';
+  const status=document.getElementById('statusMsg');
+  const errDiv=document.getElementById('errorMsg');
+  errDiv.style.display='none';
+  status.style.display='block';
+  status.innerHTML='<span class="marking-spinner"></span> AI is marking your answers. Please wait (30–60 seconds)...';
+
+  try{
+    const result=await markAll();
+    status.style.display='none';
+    showResults(result);
+    logToSheet(result);
+  }catch(e){
+    status.style.display='none';
+    errDiv.style.display='block';
+    const isFile = location.protocol === 'file:';
+    const fileMsg = isFile ? '\n\n⚠️ You are opening this file directly (file://). Open it via a local server or upload to GitHub Pages instead.' : '';
+    errDiv.textContent='ERROR:\n'+e.message+fileMsg+'\n\nStack: '+e.stack;
+    btn.disabled=false;
+    btn.textContent='Try Again';
+  }
+}
+
+async function markAll(){
+  // Auto-score MCQs
+  let mcqScore=0, mcqTotal=0, mcqDetails=[];
+  questions.filter(q=>q.type==='mcq').forEach(q=>{
+    mcqTotal+=q.marks;
+    const correct=answers[q.id]===q.answer;
+    if(correct) mcqScore+=q.marks;
+    mcqDetails.push({id:q.id,q:q.text,chosen:q.options[answers[q.id]]||'No answer',correct:q.options[q.answer],isCorrect:correct,score:correct?q.marks:0,max:q.marks});
+  });
+
+  // AI-mark open questions
+  const openQs=questions.filter(q=>q.type==='short'||q.type==='long');
+  const openTotal=openQs.reduce((a,q)=>a+q.marks,0);
+
+  const prompt=`You are a Sec 1 Digital Literacy teacher in Singapore. Mark the following open-ended questions fairly using the rubric. Be concise but specific in feedback.
+
+Student: ${studentName}
+
+${openQs.map((q,i)=>`Q${i+1} [${q.marks}marks|${q.type}]
+Q: ${q.text}
+Rubric: ${q.rubric}
+Answer: "${(answers[q.id]||'no answer').slice(0,600)}"
+`).join('\n---\n')}
+
+Reply ONLY with this JSON (no markdown):
+{"questions":[{"id":"sa1","score":2,"max":3,"feedback":"one sentence"},...],"overallFeedback":"2 sentences"}`;
+
+  const apiKey = window._apiKey || localStorage.getItem('dlc_gapi_key') || '';
+  if(!apiKey) throw new Error('No API key set. Please reload and enter your Google API key.');
+  const resp=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+apiKey,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.1,maxOutputTokens:8000}})
+  });
+  if(!resp.ok){
+    const errText = await resp.text();
+    throw new Error('API error '+resp.status+': '+errText.slice(0,300));
+  }
+  const data=await resp.json();
+  let raw=(data.candidates?.[0]?.content?.parts?.[0]?.text||'').trim();
+  if(!raw) throw new Error('Empty response from Gemini. Check your API key or try again.');
+  // Extract JSON robustly — find first { to last }
+  const jsonStart = raw.indexOf('{');
+  const jsonEnd = raw.lastIndexOf('}');
+  if(jsonStart===-1||jsonEnd===-1) throw new Error('Gemini did not return valid JSON. Raw: '+raw.slice(0,200));
+  raw = raw.slice(jsonStart, jsonEnd+1);
+  let ai;
+  try { ai=JSON.parse(raw); }
+  catch(e) {
+    // Try to salvage truncated JSON by trimming incomplete last entry
+    const truncFix = raw.replace(/,\s*\{[^}]*$/, '') + '\n  ],"overallFeedback":"Marking completed."}';
+    try { ai=JSON.parse(truncFix); }
+    catch(e2) { throw new Error('JSON parse failed: '+e.message+'\nRaw excerpt: '+raw.slice(0,300)); }
+  }
+
+  let saScore=0,saTotal=0,laScore=0,laTotal=0,qFeedback={};
+  ai.questions.forEach((r,i)=>{
+    const q=openQs[i]; if(!q) return;
+    qFeedback[q.id]={score:r.score,max:r.max||q.marks,feedback:r.feedback};
+    if(q.type==='short'){saScore+=r.score;saTotal+=q.marks;}
+    else{laScore+=r.score;laTotal+=q.marks;}
+  });
+
+  return{student:studentName,mcqScore,mcqTotal,saScore,saTotal,laScore,laTotal,
+    total:mcqScore+saScore+laScore,possible:mcqTotal+saTotal+laTotal,
+    overallFeedback:ai.overallFeedback,mcqDetails,qFeedback,openQs};
+}
+
+function getGrade(pct){
+  if(pct>=75)return{label:'Distinction',bg:'#EAF3DE',color:'#3B6D11'};
+  if(pct>=60)return{label:'Merit',bg:'#E6F1FB',color:'#185FA5'};
+  if(pct>=50)return{label:'Pass',bg:'#FAEEDA',color:'#854F0B'};
+  return{label:'Needs improvement',bg:'#FCEBEB',color:'#A32D2D'};
+}
+
+function showResults(r){
+  showScreen('screen-results');
+  const pct=Math.round(r.total/r.possible*100);
+  const grade=getGrade(pct);
+  document.getElementById('resultMeta').textContent=studentName+' · '+new Date().toLocaleDateString('en-SG',{day:'numeric',month:'long',year:'numeric'});
+  document.getElementById('bigScore').textContent=r.total+'/'+r.possible;
+  document.getElementById('bigPct').textContent=pct+'%';
+  const gb=document.getElementById('gradeBadge');
+  gb.textContent=grade.label; gb.style.background=grade.bg; gb.style.color=grade.color;
+  document.getElementById('mcqResult').textContent=r.mcqScore+'/'+r.mcqTotal;
+  document.getElementById('saResult').textContent=r.saScore+'/'+r.saTotal;
+  document.getElementById('laResult').textContent=r.laScore+'/'+r.laTotal;
+  document.getElementById('overallFeedback').textContent=r.overallFeedback;
+
+  const df=document.getElementById('detailedFeedback');
+  df.innerHTML='';
+  const letters=['A','B','C','D'];
+
+  r.mcqDetails.forEach((m,i)=>{
+    const el=document.createElement('div');
+    el.className='q-result '+(m.isCorrect?'correct':'wrong');
+    el.innerHTML='<strong>MCQ '+(i+1)+':</strong> '+(m.isCorrect?'Correct ✓':'Incorrect ✗ — Correct answer: '+m.correct)+' ('+m.score+'/'+m.max+')';
+    df.appendChild(el);
+  });
+
+  r.openQs.forEach((q,i)=>{
+    const fb=r.qFeedback[q.id]; if(!fb) return;
+    const pct2=fb.score/fb.max;
+    const cls=pct2>=0.75?'correct':pct2>=0.4?'partial':'wrong';
+    const el=document.createElement('div');
+    el.className='q-result '+cls;
+    el.innerHTML='<strong>'+(q.type==='long'?'Long answer':'Short answer')+' ('+q.unit+'):</strong> '+fb.score+'/'+fb.max+' — '+fb.feedback;
+    df.appendChild(el);
+  });
+}
+
+async function logToSheet(r){
+  const msg=document.getElementById('sheetMsg');
+  msg.textContent='Saving score to teacher\'s record...';
+  const pct=Math.round(r.total/r.possible*100);
+  const ts=new Date().toLocaleString('en-SG');
+
+  // We'll use a Google Apps Script Web App endpoint if available, or log via fetch
+  // Since this is GitHub-hosted, teacher should set up an Apps Script Web App
+  // For now, log to console and show teacher the data
+  const row={
+    timestamp:ts,
+    name:r.student,
+    mcq:r.mcqScore+'/'+r.mcqTotal,
+    shortAnswer:r.saScore+'/'+r.saTotal,
+    longAnswer:r.laScore+'/'+r.laTotal,
+    total:r.total,
+    possible:r.possible,
+    percentage:pct+'%',
+    feedback:r.overallFeedback
+  };
+  console.log('SCORE ROW:',JSON.stringify(row));
+
+  const APPS_SCRIPT_URL = localStorage.getItem('dlc_script_url') || '';
+  if(APPS_SCRIPT_URL){
+    try{
+      const params = new URLSearchParams({ data: JSON.stringify(Object.values(row)) });
+      // no-cors: we can't read the response but the write still happens
+      await fetch(APPS_SCRIPT_URL + '?' + params.toString(), {method:'GET', mode:'no-cors'});
+      msg.textContent = '✓ Score saved to Google Sheets. The teacher can now see your result.';
+    } catch(e) {
+      msg.textContent = 'Score recorded locally. Sheet sync failed — please inform your teacher.';
+      console.error('Sheet sync error:', e);
+    }
+  } else {
+    msg.textContent = '⚠ Apps Script URL not set. Please ask your teacher to configure it.';
+    console.log('SCORE ROW (copy to sheet manually):', JSON.stringify(Object.values(row)));
+  }
+}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// Teacher modal
+function openTeacher(){
+  document.getElementById('qEditor').value=JSON.stringify(questions,null,2);
+  document.getElementById('teacherModal').classList.remove('hidden');
+}
+function closeTeacher(){document.getElementById('teacherModal').classList.add('hidden');}
+function saveQuestions(){
+  try{
+    questions=JSON.parse(document.getElementById('qEditor').value);
+    document.getElementById('saveMsg').textContent='✓ '+questions.length+' questions loaded.';
+    if(document.getElementById('screen-test').classList.contains('active')) renderQuestions();
+  }catch(e){document.getElementById('saveMsg').textContent='Error: '+e.message;}
+}
+</script>
+</body>
+</html>
